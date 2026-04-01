@@ -7,7 +7,7 @@ export default function CustomerCenter() {
   return (
     <div className="container">
       {/* 헤더 */}
-      <Header />
+      <Header showNav={false} />
 
       
       <div className="content">

@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 export default function MyPage() {
   return (
     <div className="container">
-      <Header />
+      <Header showNav={false} />
 
       <div className="content">
         {/* 좌측 메뉴 */}

@@ -1,3 +1,5 @@
+import { useState } from "react";
+import "../assets/css/HomePage.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -123,11 +125,45 @@ export default function HomePage() {
     },
   ];
 
+   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+
   return (
     <>
       <div className="page">
         {/* 헤더추가 */}
-        <Header />
+        <Header
+        onCategoryClick={() => {
+          setIsCategoryOpen(true);
+          setIsAlarmOpen(false);
+        }}
+        onAlarmClick={() => {
+          setIsAlarmOpen(true);
+          setIsCategoryOpen(false);
+        }}
+      />
+      {(isCategoryOpen || isAlarmOpen) && (
+        <div
+          className="category-overlay"
+          onClick={() => {
+            setIsCategoryOpen(false);
+            setIsAlarmOpen(false);
+          }}
+        />
+      )}
+      <aside className={`category-drawer ${isCategoryOpen ? "open" : ""}`}>
+        <div className="category-drawer-header">
+          <button onClick={() => setIsCategoryOpen(false)}>✕</button>
+          <h2>카테고리</h2>
+        </div>
+      </aside>
+
+      <aside className={`alarm-drawer ${isAlarmOpen ? "open" : ""}`}>
+        <div className="alarm-header">
+          <button onClick={() => setIsAlarmOpen(false)}>✕</button>
+          <h2>알림</h2>
+        </div>
+      </aside>
         {/* 상단 슬라이드*/}
         <main className="main-content">
           <section className="hero-section">

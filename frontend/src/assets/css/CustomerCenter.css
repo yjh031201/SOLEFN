@@ -1,0 +1,117 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: white;
+}
+
+.container {
+  width: 100%;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo {
+  font-size: 50px;
+  font-weight: bold;
+  color: black;
+}
+
+.nav span {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+/* 레이아웃 */
+.content {
+  display: flex;
+}
+
+/* 사이드바 */
+.sidebar {
+    
+  width: 250px;
+  background: white;
+  padding: 20px;
+  color: black;
+  
+}
+.sidebar h2{
+    
+    text-align: left;
+  padding-top: 40px;
+  padding-bottom: 35px;
+    color: black;
+    font-size: 40px;
+}
+
+
+.menu {
+  margin-top: 20px;
+}
+
+
+.menu h3 {
+  margin-bottom: 30px;
+}
+
+
+
+/* 메인 */
+.main {
+  flex: 1;
+  padding: 30px;
+  background: white;
+}
+
+/* 공지사항 섹션 전체 */
+section {
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+/* 제목 스타일 */
+.notice h2 {
+    color: black;
+    text-align: left;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid black;
+}
+
+.contents  {
+    margin-top: 20px;
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    
+}
+
+.contents h2 {
+    margin-top: 5px;
+    font-size: 15px;
+    color: black;
+    font-weight: bold;
+}
+.contents p {
+    font-size: 15px;
+    margin-left: 20px;
+    color: black;
+}
+
+
+/* 푸터 */
+.footer {
+  padding: 20px;
+  text-align: center;
+  background: #eee;
+  margin-top: 50px;
+}

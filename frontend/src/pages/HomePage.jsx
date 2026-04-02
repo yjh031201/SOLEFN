@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../assets/css/HomePage.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import CategoryPanel from "../components/CategoryPanel";
 
 export default function HomePage() {
   //더미 데이터
@@ -151,12 +152,10 @@ export default function HomePage() {
           }}
         />
       )}
-      <aside className={`category-drawer ${isCategoryOpen ? "open" : ""}`}>
-        <div className="category-drawer-header">
-          <button onClick={() => setIsCategoryOpen(false)}>✕</button>
-          <h2>카테고리</h2>
-        </div>
-      </aside>
+      <CategoryPanel
+          isOpen={isCategoryOpen}
+          onClose={() => setIsCategoryOpen(false)}
+        />
 
       <aside className={`alarm-drawer ${isAlarmOpen ? "open" : ""}`}>
         <div className="alarm-header">

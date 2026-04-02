@@ -55,6 +55,7 @@ export default function TopBar({ onCategoryClick, onAlarmClick }) {
             className="icon-btn"
             aria-label="메뉴"
             onClick={onCategoryClick}
+            style={{ cursor: "pointer" }}
           >
             ☰
           </button>

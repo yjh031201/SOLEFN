@@ -1,8 +1,9 @@
 import { useState } from "react";
 import "../assets/css/HomePage.css";
+import CategoryPanel from "../components/CategoryPanel";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import CategoryPanel from "../components/CategoryPanel";
+import AlarmPanel from "../components/AlarmPanel";
 
 export default function HomePage() {
   //더미 데이터
@@ -126,7 +127,7 @@ export default function HomePage() {
     },
   ];
 
-   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
 
   return (
@@ -134,35 +135,33 @@ export default function HomePage() {
       <div className="page">
         {/* 헤더추가 */}
         <Header
-        onCategoryClick={() => {
-          setIsCategoryOpen(true);
-          setIsAlarmOpen(false);
-        }}
-        onAlarmClick={() => {
-          setIsAlarmOpen(true);
-          setIsCategoryOpen(false);
-        }}
-      />
-      {(isCategoryOpen || isAlarmOpen) && (
-        <div
-          className="category-overlay"
-          onClick={() => {
-            setIsCategoryOpen(false);
+          onCategoryClick={() => {
+            setIsCategoryOpen(true);
             setIsAlarmOpen(false);
           }}
+          onAlarmClick={() => {
+            setIsAlarmOpen(true);
+            setIsCategoryOpen(false);
+          }}
         />
-      )}
-      <CategoryPanel
+        {(isCategoryOpen || isAlarmOpen) && (
+          <div
+            className="category-overlay"
+            onClick={() => {
+              setIsCategoryOpen(false);
+              setIsAlarmOpen(false);
+            }}
+          />
+        )}
+        <CategoryPanel
           isOpen={isCategoryOpen}
           onClose={() => setIsCategoryOpen(false)}
         />
 
-      <aside className={`alarm-drawer ${isAlarmOpen ? "open" : ""}`}>
-        <div className="alarm-header">
-          <button onClick={() => setIsAlarmOpen(false)}>✕</button>
-          <h2>알림</h2>
-        </div>
-      </aside>
+        <AlarmPanel
+          isOpen={isAlarmOpen}
+          onClose={() => setIsAlarmOpen(false)}
+        />
         {/* 상단 슬라이드*/}
         <main className="main-content">
           <section className="hero-section">

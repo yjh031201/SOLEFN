@@ -1,5 +1,6 @@
 import TopBar from "./TopBar";
 import NavBar from "./NavBar";
+import "../assets/css/Header.css";
 
 export default function Header({ onCategoryClick, onAlarmClick, showNav = true }) {
   return (

@@ -1,25 +1,6 @@
 .container {
   width: 100%;
-}
-
-/* 헤더 */
-.header {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px 30px;
-  background: white;
-  border-bottom: 1px solid #ddd;
-}
-
-.logo {
-  font-size: 50px;
-  font-weight: bold;
-  color: black;
-}
-
-.nav span {
-  margin-left: 15px;
-  cursor: pointer;
+   padding-top: 90px;
 }
 
 /* 레이아웃 */
@@ -125,15 +106,13 @@
 
 
 /* 상품 리스트 */
-/* "최근 본 상품" 제목 스타일 (선택사항) */
-h3 {
+.section h3 {
   margin: 20px 0;
   font-size: 1.2rem;
   font-weight: bold;
   text-align: left;
   color: black;
 }
-
 /* 개별 상품 아이템 상자 */
 .item {
   display: flex; /* 핵심 1: 이미지와 텍스트 영역을 가로로 배치 */
@@ -171,12 +150,4 @@ h3 {
   color: black; /* 이미지처럼 너무 연하지 않은 회색 */
   text-align: right; /* 핵심 4: 확장된 div 안에서 텍스트를 오른쪽 정렬 */
   font-weight: 500;
-}
-
-/* 푸터 */
-.footer {
-  padding: 20px;
-  text-align: center;
-  background: #eee;
-  margin-top: 50px;
 }

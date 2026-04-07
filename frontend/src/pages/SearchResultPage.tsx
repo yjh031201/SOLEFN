@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import "../assets/css/SearchResult.css";
 import Header from "../components/Header";
 import CategoryPanel from "../components/CategoryPanel";
+import AlarmPanel from "../components/AlarmPanel";
 
 interface Product {
   name: string;
@@ -131,12 +132,10 @@ const SearchResultPage: React.FC = () => {
   isOpen={isCategoryOpen}
   onClose={() => setIsCategoryOpen(false)}
 />
-<aside className={`alarm-drawer ${isAlarmOpen ? "open" : ""}`}>
-  <div className="alarm-header">
-    <button onClick={() => setIsAlarmOpen(false)}>✕</button>
-    <h2>알림</h2>
-  </div>
-</aside>
+<AlarmPanel
+  isOpen={isAlarmOpen}
+  onClose={() => setIsAlarmOpen(false)}
+/>
       {/* 필터 바 */}
       <section className="filter-section">
         <div className="filter-bar">

@@ -144,15 +144,6 @@ export default function HomePage() {
             setIsCategoryOpen(false);
           }}
         />
-        {(isCategoryOpen || isAlarmOpen) && (
-          <div
-            className="category-overlay"
-            onClick={() => {
-              setIsCategoryOpen(false);
-              setIsAlarmOpen(false);
-            }}
-          />
-        )}
         <CategoryPanel
           isOpen={isCategoryOpen}
           onClose={() => setIsCategoryOpen(false)}

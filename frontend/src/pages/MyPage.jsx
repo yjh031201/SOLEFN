@@ -2,6 +2,8 @@ import React from "react";
 import "../assets/css/MyPage.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 export default function MyPage() {
   return (
@@ -10,21 +12,7 @@ export default function MyPage() {
 
       <div className="content">
         {/* 좌측 메뉴 */}
-        <aside className="sidebar">
-          <h2>마이페이지</h2>
-
-          <div className="menu">
-            <h3>쇼핑 정보</h3>
-            <p>최근 본 상품</p>
-            <p>관심 상품</p>
-          </div>
-
-          <div className="menu">
-            <h3>내 정보</h3>
-            <p>로그인 정보</p>
-            <p>프로필 정보</p>
-          </div>
-        </aside>
+        <Sidebar/>
 
         {/* 메인 영역 */}
        <main className="main">

@@ -1,24 +1,24 @@
 import { Link } from "react-router-dom";
 import "../assets/css/sidebar.css";
 
-export default function Sidebar() {
+
+
+export default function Sidebar({ title, menus }) {
   return (
     <aside className="sidebar">
       <Link to="/mypage" className="mypage">
-        마이페이지
+        {title}
       </Link>
 
-      <div className="menu">
-        <h3>쇼핑 정보</h3>
-        <p>최근 본 상품</p>
-        <p>관심 상품</p>
-      </div>
+      {menus.map((menu, idx) => (
+        <div className="menu" key={idx}>
+          <h3>{menu.title}</h3>
 
-      <div className="menu">
-        <h3>내 정보</h3>
-        <p>로그인 정보</p>
-        <p>프로필 정보</p>
-      </div>
+          {menu.items.map((item, i) => (
+            <p key={i}>{item}</p>
+          ))}
+        </div>
+      ))}
     </aside>
   );
 }

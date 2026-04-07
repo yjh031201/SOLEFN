@@ -2,8 +2,20 @@ import React from "react";
 import "../assets/css/CustomerCenter.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Sidebar from "../components/Sidebar";
 
 export default function CustomerCenter() {
+
+  const menus = [
+  {
+    title: "공지사항",
+    items: [ ]
+  },
+  {
+    title: "자주 묻는 질문",
+    items: []
+  }
+];
   return (
     <div className="container">
       {/* 헤더 */}
@@ -12,19 +24,7 @@ export default function CustomerCenter() {
       
       <div className="content">
         {/* 좌측 메뉴 */}
-        <aside className="sidebar">
-          <h2>고객센터</h2>
-
-          <div className="menu">
-            <h3>공지사항</h3>
-            
-          </div>
-
-          <div className="menu">
-            <h3>자주 묻는 질문</h3>
-            
-          </div>
-        </aside>
+        <Sidebar title="고객센터" menus={menus} />
 
         {/* 메인 영역 */}
        <main className="main">

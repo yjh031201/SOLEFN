@@ -193,14 +193,15 @@ export default function HomePage() {
           </section>
           {/* 슬로건 섹션 */}
           <section className="slogan-section">
-            <h2>신발 싸게 살 수 있다</h2>
-            <p>여러 쇼핑몰의 가격을 비교하고 최저가로 구매하세요</p>
+            <h2>모든 가격을 넘어, 단 하나의 최선으로</h2>
+            <p>수천 개의 가격 데이터가 정돈된 하나의 선명한 결론, <br />
+              비교의 수고로움이 사라진 자리에 채워지는 쇼핑의 즐거움</p>
           </section>
           {/* 프로모션 섹션 */}
           <section className="promo-section">
             <div className="section-title-row">
               <h2>FIND SHOES가 추천하는 신발</h2>
-              <button className="more-btn">더보기</button>
+              <div className="more-btn">더보기</div>
             </div>
 
             <div className="promo-grid">
@@ -219,7 +220,7 @@ export default function HomePage() {
           <section className="brand-section">
             <div className="section-title-row">
               <h2>브랜드</h2>
-              <button className="more-btn">전체보기</button>
+              <div className="more-btn">전체보기</div>
             </div>
 
             <div className="brand-grid">
@@ -239,7 +240,7 @@ export default function HomePage() {
           <section className="category-section">
             <div className="section-title-row">
               <h2>카테고리 모두보기</h2>
-              <button className="more-btn">전체보기</button>
+              <div className="more-btn">전체보기</div>
             </div>
 
             <div className="category-grid">

@@ -34,7 +34,7 @@ export default function CustomerCenter() {
 
       <div className="content">
         {/* 좌측 메뉴 */}
-        <Sidebar title="고객센터" menus={menus} />
+        <Sidebar title="고객센터" menus={menus} link="/customer" />
 
         {/* 메인 영역 */}
         <main className="main">

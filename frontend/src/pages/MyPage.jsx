@@ -33,7 +33,7 @@ export default function MyPage() {
 
       <div className="content">
         {/* 좌측 메뉴 */}
-        <Sidebar title="마이페이지" menus={menus} />
+        <Sidebar title="마이페이지" menus={menus} link="/mypage" />
 
         {/* 메인 영역 */}
         <main className="main">

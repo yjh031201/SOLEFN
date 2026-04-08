@@ -3,10 +3,10 @@ import "../assets/css/Sidebar.css";
 
 
 
-export default function Sidebar({ title, menus }) {
+export default function Sidebar({ title, menus, link }) {
   return (
     <aside className="sidebar">
-      <Link to="/mypage" className="mypage">
+      <Link to={link} className="mypage">
         {title}
       </Link>
 

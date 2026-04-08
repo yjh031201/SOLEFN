@@ -1,12 +1,5 @@
 .header-wrap {
   width: 100%;
-  height: 142px;
-}
-.header-wrap.with-nav {
-  height: 142px;
-}
-
-.header-wrap.no-nav {
   height: 90px;
 }
 
@@ -32,16 +25,9 @@
   line-height: 1;
 }
 
-.logo-main {
-  font-size: 52px;
-  font-weight: 900;
-  letter-spacing: -2px;
-}
-
-.logo-sub {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 6px;
+.logo-image {
+  width: 150px; /* 원하는 크기 */
+  height: auto;
 }
 
 .header-right {
@@ -81,32 +67,6 @@
   background-color: #f0f0f0;
 }
 
-.category-nav {
-  position: fixed;
-  top: 90px;
-  left: 0;
-  width: 100%;
-  height: 52px;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  padding: 0 48px;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.category-nav span {
-  cursor: pointer;
-  color: #555;
-}
-
-.category-nav .active {
-  color: #000;
-}
-
 @media (max-width: 1024px) {
   .logo-main { font-size: 40px; }
   .logo-sub  { font-size: 18px; }
@@ -138,7 +98,4 @@
     gap: 18px;
     font-size: 14px;
   }
-
-  .header-wrap        { height: 172px; }
-  .header-wrap.no-nav { height: 120px; }
 }

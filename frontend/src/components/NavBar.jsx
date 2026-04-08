@@ -1,3 +1,5 @@
+import "../assets/css/HomePage.css";
+
 export default function NavBar() {
   return (
     <nav className="category-nav">

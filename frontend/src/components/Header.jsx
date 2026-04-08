@@ -1,15 +1,13 @@
 import TopBar from "./TopBar";
-import NavBar from "./NavBar";
 import "../assets/css/Header.css";
 
-export default function Header({ onCategoryClick, onAlarmClick, showNav = true }) {
+export default function Header({ onCategoryClick, onAlarmClick }) {
   return (
-    <div className={`header-wrap ${showNav ? "with-nav" : "no-nav"}`}>
+    <div className="header-wrap">
       <TopBar
         onCategoryClick={onCategoryClick}
         onAlarmClick={onAlarmClick}
       />
-      {showNav && <NavBar />}
     </div>
   );
 }

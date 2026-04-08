@@ -4,6 +4,7 @@ import CategoryPanel from "../components/CategoryPanel";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AlarmPanel from "../components/AlarmPanel";
+import NavBar from "../components/NavBar";
 
 export default function HomePage() {
   //더미 데이터
@@ -153,6 +154,7 @@ export default function HomePage() {
           isOpen={isAlarmOpen}
           onClose={() => setIsAlarmOpen(false)}
         />
+        <NavBar />
         {/* 상단 슬라이드*/}
         <main className="main-content">
           <section className="hero-section">

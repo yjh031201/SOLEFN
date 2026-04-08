@@ -25,7 +25,6 @@ export default function CustomerCenter() {
     <div className="container">
       {/* 헤더 */}
       <Header
-        showNav={false}
         onCategoryClick={() => setIsCategoryOpen(true)}
         onAlarmClick={() => setIsAlarmOpen(true)}
       />

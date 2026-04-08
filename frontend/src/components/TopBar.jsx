@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import logo from '../image/logo3.svg';
+import search from '../image/search.svg';
+import notification from '../image/notification.svg';
+import category from '../image/category.svg';
 
 export default function TopBar({ onCategoryClick, onAlarmClick }) {
   const [isLogin, setIsLogin] = useState(false);
@@ -9,8 +13,7 @@ export default function TopBar({ onCategoryClick, onAlarmClick }) {
     <header className="top-header">
       <div className="logo-area">
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <span className="logo-main">FIND</span>
-          <span className="logo-sub">SHOES</span>
+          <img src={logo} alt="SOLEFN 로고" className="logo-image" />
         </Link>
       </div>
 
@@ -40,7 +43,7 @@ export default function TopBar({ onCategoryClick, onAlarmClick }) {
             aria-label="검색"
             onClick={() => navigate('/search')}
           >
-            🔍
+            <img src={search} alt="검색" className="logo-search" />
           </button>
 
           <button
@@ -48,7 +51,7 @@ export default function TopBar({ onCategoryClick, onAlarmClick }) {
             aria-label="알림"
             onClick={onAlarmClick}
           >
-            🔔
+            <img src={notification} alt="알림" className="logo-notification" />
           </button>
 
           <button
@@ -57,7 +60,7 @@ export default function TopBar({ onCategoryClick, onAlarmClick }) {
             onClick={onCategoryClick}
             style={{ cursor: "pointer" }}
           >
-            ☰
+            <img src={category} alt="카테고리" className="logo-category" />
           </button>
         </div>
       </div>

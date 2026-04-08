@@ -25,7 +25,6 @@ export default function MyPage() {
   return (
     <div className="container">
       <Header
-        showNav={false}
         onCategoryClick={() => setIsCategoryOpen(true)}
         onAlarmClick={() => setIsAlarmOpen(true)}
       />

@@ -20,8 +20,7 @@ interface ColorOption {
 const SearchResultPage: React.FC = () => {
   // --- [상태 관리] ---
   
-  const [searchParams] = useSearchParams(); 
-  const query = searchParams.get("q") || "";
+  const [searchParams] = useSearchParams();
   const [activeModal, setActiveModal] = useState<
     "color" | "price" | "size" | null
   >(null);
@@ -118,7 +117,6 @@ const SearchResultPage: React.FC = () => {
     <div className="search-page-container">
       {/* 헤더 */}
       <Header
-  showNav={false}
   onCategoryClick={() => {
     setIsCategoryOpen(true);
     setIsAlarmOpen(false);

@@ -4,7 +4,7 @@ import MyPage from '../pages/MyPage';
 import CustomerCenter from '../pages/CustomerCenter';
 import ProductDetail from '../pages/ProductDetail';
 import SearchBox from '../pages/SearchBox';
-import SearchResultPage from '../pages/SearchResultPage';
+import SearchResultPage from '../pages/SearchResultPage.tsx';
 
 export default function Router() {
   return (

@@ -95,7 +95,7 @@
   height: 56px;
   border: none;
   border-radius: 50%;
-  background-color: rgba(80, 80, 80, 0.6);
+  background-color: transparent;
   color: #fff;
   font-size: 36px;
   cursor: pointer;

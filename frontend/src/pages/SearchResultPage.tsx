@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import axios from "axios";
 import "../assets/css/SearchResult.css";
 import Header from "../components/Header";
 import CategoryPanel from "../components/CategoryPanel";
 import AlarmPanel from "../components/AlarmPanel";
 
 interface Product {
-  name: string;
-  price: string;
-  discount: string;
-  img: string;
+  id: string;
+  title: string;
+  price: string; // 네이버 lprice (숫자 문자열)
+  image: string;
+  link: string;
+  mallName: string;
+  brand: string;
+  category2: string;
+  category3: string;
 }
 
 interface ColorOption {
@@ -17,16 +23,20 @@ interface ColorOption {
   hex: string;
 }
 
+type SortKey = "인기순" | "관심순" | "판매일순" | "높은가격순" | "낮은가격순";
+
 const SearchResultPage: React.FC = () => {
-  // --- [상태 관리] ---
-  
+  // --- [URL 쿼리] ---
   const [searchParams] = useSearchParams();
+  const keyword = (searchParams.get("q") || "").trim();
+
+  // --- [상태 관리] ---
   const [activeModal, setActiveModal] = useState<
     "color" | "price" | "size" | null
   >(null);
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
-  const [currentSort, setCurrentSort] = useState<string>("인기순");
-  const [wishList, setWishList] = useState<number[]>([]);
+  const [currentSort, setCurrentSort] = useState<SortKey>("인기순");
+  const [wishList, setWishList] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 
@@ -37,22 +47,112 @@ const SearchResultPage: React.FC = () => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
 
-  // --- [데이터] ---
-  const productData: Product[] = [
-    {
-      name: "나이키 에어포스 1 '07 로우 화이트",
-      price: "100,000원",
-      discount: "32%",
-      img: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=400",
-    },
-    {
-      name: "나이키 에어포스 1 '07 로우 트리플 블랙",
-      price: "109,000원",
-      discount: "26%",
-      img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400",
-    },
-  ];
+  // --- [상품 데이터(API)] ---
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [offset, setOffset] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
+  // 검색어가 변경되면 초기화
+  useEffect(() => {
+    if (!keyword) {
+      setProducts([]);
+      setErrorMsg("");
+      setOffset(0);
+      setHasMore(false);
+      return;
+    }
+    setOffset(0);
+    setProducts([]);
+  }, [keyword]);
+
+  // 상품 데이터 페칭
+  useEffect(() => {
+    if (!keyword) return;
+
+    let cancelled = false;
+    const controller = new AbortController();
+
+    const fetchProducts = async () => {
+      const isFirstLoad = offset === 0;
+      if (isFirstLoad) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+      setErrorMsg("");
+
+      try {
+        const res = await axios.get("/api/search", {
+          params: { q: keyword, offset },
+          signal: controller.signal,
+        });
+        if (cancelled) return;
+
+        const newItems: Product[] = res.data?.items ?? [];
+        const nextHasMore = res.data?.hasMore ?? false;
+
+        setHasMore(nextHasMore);
+        if (isFirstLoad) {
+          setProducts(newItems);
+        } else {
+          setProducts((prev) => [...prev, ...newItems]);
+        }
+      } catch (err: any) {
+        if (axios.isCancel(err) || err.name === "CanceledError") return;
+        if (cancelled) return;
+        console.error(err);
+        setErrorMsg("검색 결과를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
+        if (offset === 0) {
+          setProducts([]);
+        }
+      } finally {
+        if (!cancelled) {
+          if (isFirstLoad) {
+            setLoading(false);
+          } else {
+            setLoadingMore(false);
+          }
+        }
+      }
+    };
+
+    fetchProducts();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [keyword, offset]);
+
+  // --- [정렬/필터 적용된 상품 목록] ---
+  const visibleProducts = useMemo(() => {
+    let list = [...products];
+
+    // 가격대 필터 (직접입력)
+    if (isDirectInputMode && priceRange.min && priceRange.max) {
+      const min = Number(priceRange.min);
+      const max = Number(priceRange.max);
+      list = list.filter((p) => {
+        const price = Number(p.price);
+        return price >= min && price <= max;
+      });
+    }
+
+    // 정렬
+    if (currentSort === "높은가격순") {
+      list.sort((a, b) => Number(b.price) - Number(a.price));
+    } else if (currentSort === "낮은가격순") {
+      list.sort((a, b) => Number(a.price) - Number(b.price));
+    }
+    // 그 외 정렬(인기순/관심순/판매일순)은 API에서 받은 순서 유지
+
+    return list;
+  }, [products, currentSort, isDirectInputMode, priceRange]);
+
+  // --- [데이터(필터용 상수)] ---
   const colorData: ColorOption[] = [
     { name: "라벤더", hex: "#A58FCF" },
     { name: "민트", hex: "#81CBB0" },
@@ -85,9 +185,9 @@ const SearchResultPage: React.FC = () => {
   ];
 
   // --- [이벤트 핸들러] ---
-  const toggleWish = (index: number) => {
+  const toggleWish = (id: string) => {
     setWishList((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
@@ -113,27 +213,50 @@ const SearchResultPage: React.FC = () => {
     setActiveModal(null);
   };
 
+  const formatPrice = (price: string) => {
+    const num = Number(price);
+    if (Number.isNaN(num)) return price;
+    return `${num.toLocaleString("ko-KR")}원`;
+  };
+
   return (
     <div className="search-page-container">
       {/* 헤더 */}
       <Header
-  onCategoryClick={() => {
-    setIsCategoryOpen(true);
-    setIsAlarmOpen(false);
-  }}
-  onAlarmClick={() => {
-    setIsAlarmOpen(true);
-    setIsCategoryOpen(false);
-  }}
-/>
-<CategoryPanel
-  isOpen={isCategoryOpen}
-  onClose={() => setIsCategoryOpen(false)}
-/>
-<AlarmPanel
-  isOpen={isAlarmOpen}
-  onClose={() => setIsAlarmOpen(false)}
-/>
+        onCategoryClick={() => {
+          setIsCategoryOpen(true);
+          setIsAlarmOpen(false);
+        }}
+        onAlarmClick={() => {
+          setIsAlarmOpen(true);
+          setIsCategoryOpen(false);
+        }}
+      />
+      <CategoryPanel
+        isOpen={isCategoryOpen}
+        onClose={() => setIsCategoryOpen(false)}
+      />
+      <AlarmPanel
+        isOpen={isAlarmOpen}
+        onClose={() => setIsAlarmOpen(false)}
+      />
+
+      {/* 검색 키워드 / 결과 요약 */}
+      <section className="search-summary" style={{ padding: "12px 16px" }}>
+        {keyword ? (
+          <p style={{ margin: 0, fontSize: "15px" }}>
+            <strong>"{keyword}"</strong> 검색 결과
+            {!loading && !errorMsg && (
+              <span style={{ color: "#888", marginLeft: 8 }}>
+                총 {visibleProducts.length}건
+              </span>
+            )}
+          </p>
+        ) : (
+          <p style={{ margin: 0, color: "#888" }}>검색어를 입력해주세요.</p>
+        )}
+      </section>
+
       {/* 필터 바 */}
       <section className="filter-section">
         <div className="filter-bar">
@@ -148,13 +271,15 @@ const SearchResultPage: React.FC = () => {
             </div>
             {isSortOpen && (
               <div className="sort-dropdown show">
-                {[
-                  "인기순",
-                  "관심순",
-                  "판매일순",
-                  "높은가격순",
-                  "낮은가격순",
-                ].map((item) => (
+                {(
+                  [
+                    "인기순",
+                    "관심순",
+                    "판매일순",
+                    "높은가격순",
+                    "낮은가격순",
+                  ] as SortKey[]
+                ).map((item) => (
                   <div
                     key={item}
                     className="sort-item"
@@ -174,43 +299,108 @@ const SearchResultPage: React.FC = () => {
 
       {/* 상품 그리드 */}
       <main className="product-grid">
-        {Array.from({ length: 15 }).map((_, i) => {
-          const item = productData[i % productData.length];
-          const isWished = wishList.includes(i);
-          return (
-            <div className="product-card" key={i}>
-              <div className="product-img">
-                <img
-                  src={`${item.img}&sig=${i}`}
-                  alt={item.name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <div className="product-info">
-                <div className="brand-row">
-                  <span className="brand">Nike</span>
-                  <span
-                    className={`material-symbols-outlined wish-icon ${isWished ? "active" : ""}`}
-                    onClick={() => toggleWish(i)}
-                  >
-                    {isWished ? "favorite" : "favorite_border"}
-                  </span>
+        {loading && (
+          <p style={{ gridColumn: "1 / -1", textAlign: "center", padding: 24 }}>
+            검색 중...
+          </p>
+        )}
+
+        {!loading && errorMsg && (
+          <p
+            style={{
+              gridColumn: "1 / -1",
+              textAlign: "center",
+              padding: 24,
+              color: "#e74c3c",
+            }}
+          >
+            {errorMsg}
+          </p>
+        )}
+
+        {!loading && !errorMsg && keyword && visibleProducts.length === 0 && (
+          <p style={{ gridColumn: "1 / -1", textAlign: "center", padding: 24 }}>
+            "{keyword}"에 대한 검색 결과가 없습니다.
+          </p>
+        )}
+
+        {!loading &&
+          !errorMsg &&
+          visibleProducts.map((item) => {
+            const isWished = wishList.includes(item.id);
+            const brandText = item.brand?.trim() || item.mallName || "Shop";
+            return (
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="product-card"
+                key={item.id}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <div className="product-img">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
                 </div>
-                <p className="name">{item.name}</p>
-                <div className="price-row">
-                  {item.discount && (
-                    <span className="discount">{item.discount}</span>
-                  )}
-                  <span className="price">{item.price}</span>
+                <div className="product-info">
+                  <div className="brand-row">
+                    <span className="brand">{brandText}</span>
+                    <span
+                      className={`material-symbols-outlined wish-icon ${
+                        isWished ? "active" : ""
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleWish(item.id);
+                      }}
+                    >
+                      {isWished ? "favorite" : "favorite_border"}
+                    </span>
+                  </div>
+                  <p className="name">{item.title}</p>
+                  <div className="price-row">
+                    <span className="price">{formatPrice(item.price)}</span>
+                  </div>
+                  <div className="extra-row">
+                    <span className="review">{item.category2}</span>
+                    {item.category3 && (
+                      <span className="wish-count">{item.category3}</span>
+                    )}
+                  </div>
                 </div>
-                <div className="extra-row">
-                  <span className="review">후기 1,234</span>
-                  <span className="wish-count">관심 2,345</span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+              </a>
+            );
+          })}
+
+        {/* 더보기 버튼 */}
+        {!loading && hasMore && (
+          <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 24 }}>
+            <button
+              onClick={() => setOffset(offset + 50)}
+              disabled={loadingMore}
+              style={{
+                padding: "12px 32px",
+                fontSize: "16px",
+                backgroundColor: "#333",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                cursor: loadingMore ? "not-allowed" : "pointer",
+                opacity: loadingMore ? 0.6 : 1,
+              }}
+            >
+              {loadingMore ? "로딩 중..." : "더보기"}
+            </button>
+          </div>
+        )}
       </main>
 
       {/* 모달 시스템 */}

@@ -1,6 +1,12 @@
 # Claude
 .claude/
 
+# Java / Maven
+backend/target/
+*.class
+*.jar
+!mvnw.jar
+
 # Logs
 logs
 *.log

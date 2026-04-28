@@ -165,7 +165,7 @@ export default function HomePage() {
 
             <div className="hero-overlay">
               <p className="hero-small">새로운 브랜드</p>
-              <h1 className="hero-title">뉴발란스</h1>
+              <h1 className="hero-title">나이키</h1>
               <p className="hero-desc">
                 다양한 판매처의 가격을 비교하고
                 <br />

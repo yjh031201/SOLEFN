@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo3.svg';
 import search from '../assets/images/search.svg';
@@ -6,7 +5,6 @@ import notification from '../assets/images/notification.svg';
 import category from '../assets/images/category.svg';
 
 export default function TopBar({ onCategoryClick, onAlarmClick }) {
-  const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -25,16 +23,6 @@ export default function TopBar({ onCategoryClick, onAlarmClick }) {
           <Link to="/mypage" style={{ textDecoration: 'none', color: 'inherit' }}>
             마이페이지
           </Link>
-
-          {isLogin ? (
-            <span onClick={() => setIsLogin(false)} style={{ cursor: 'pointer' }}>
-              로그아웃
-            </span>
-          ) : (
-            <span onClick={() => setIsLogin(true)} style={{ cursor: 'pointer' }}>
-              로그인
-            </span>
-          )}
         </div>
 
         <div className="top-icons">

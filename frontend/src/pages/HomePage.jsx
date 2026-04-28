@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AlarmPanel from "../components/AlarmPanel";
 import NavBar from "../components/NavBar";
+import MainHero from "../assets/images/mainimage.png";
 
 export default function HomePage() {
   //더미 데이터
@@ -175,7 +176,7 @@ export default function HomePage() {
 
             <img
               className="hero-image"
-              src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?q=80&w=1600&auto=format&fit=crop"
+              src={MainHero}
               alt="메인 신발 배너"
             />
 

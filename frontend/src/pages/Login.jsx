@@ -1,8 +1,8 @@
-import { Button } from "../components/LoginUi/button";
-import { Card, CardContent } from "../components/LoginUi/card";
-import { Checkbox } from "../components/LoginUi/checkbox";
-import { Input } from "../components/LoginUi/input";
-
+import { Button } from "../components/LoginUi/Button";
+import { Card, CardContent } from "../components/LoginUi/Card";
+import { Checkbox } from "../components/LoginUi/CheckBox";
+import { Input } from "../components/LoginUi/Input";
+import solefn from "../assets/images/SOLEFN.png";
 const formFields = [
   {
     id: "login-id",
@@ -26,12 +26,12 @@ const footerLinks = [
   { label: "회원가입", href: "#" },
 ];
 
-export const Screen = () => {
+export default function Login() {
   return (
     <main className="flex min-h-screen w-full min-w-[1512px] items-start justify-center bg-white px-6 pt-[61px] pb-[120px]">
       <section className="flex w-full max-w-[975px] flex-col items-center">
         <h1 className="mb-[121px] text-center font-['Montserrat',Helvetica] text-[100px] font-semibold leading-none tracking-[0] text-black">
-          로고
+          <img src={solefn} alt="SOLEFN 로고" className="logo-image" />
         </h1>
 
         <Card className="w-full rounded-[20px] border border-black bg-transparent shadow-none">
@@ -100,4 +100,4 @@ export const Screen = () => {
       </section>
     </main>
   );
-};
+}

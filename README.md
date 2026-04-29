@@ -15,8 +15,10 @@
 > git push origin 브랜치 이름 (master에 직접 푸시 x)     
 
 # 깃에서 받아오는 법
->git checkout 브랜치   
->git pull origin master
+>git checkout master   
+>git pull origin master   
+>git checkout 브랜치 이름   
+>git merge master   
 
 # 새 브랜치 만드는 법
 >git checkout -b 새브랜치

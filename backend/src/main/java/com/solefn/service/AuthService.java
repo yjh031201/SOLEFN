@@ -5,7 +5,6 @@ import com.solefn.dto.LoginRequest;
 import com.solefn.dto.SignupRequest;
 import com.solefn.entity.User;
 import com.solefn.repository.UserRepository;
-import com.solefn.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
     public AuthResponse signup(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -34,8 +32,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String token = jwtUtil.generateToken(user.getEmail());
-        return new AuthResponse(token, user.getUsername(), user.getEmail(), user.getName());
+        return new AuthResponse(user.getUsername(), user.getEmail(), user.getName());
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -46,7 +43,6 @@ public class AuthService {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail());
-        return new AuthResponse(token, user.getUsername(), user.getEmail(), user.getName());
+        return new AuthResponse(user.getUsername(), user.getEmail(), user.getName());
     }
 }

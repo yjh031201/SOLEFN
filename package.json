@@ -8,14 +8,8 @@
   "scripts": {
     "install:all": "npm install --prefix frontend",
     "dev": "cd frontend && npm run dev",
-    "backend:dev": "cd backend && mvn spring-boot:run",
-    "backend:build": "cd backend && mvn -q -DskipTests package"
-  },
-  "devDependencies": {
-    "concurrently": "^9.2.1"
-  },
-  "dependencies": {
-    "@radix-ui/react-checkbox": "^1.3.3",
-    "lucide-react": "^1.12.0"
+    "dev:local": "cd frontend && npm run dev:local",
+    "backend:dev": "cd backend && mvnw.cmd spring-boot:run",
+    "backend:build": "cd backend && mvnw.cmd -q -DskipTests package"
   }
 }

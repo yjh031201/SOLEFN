@@ -6,6 +6,8 @@
 > npm install   
 > 백엔드의 .env파일 생성후 .env.example 양식대로 작성
 ### solefn 경로에서 npm run dev치면 전체 실행   
+### remote 변경   
+>git remote set-url origin https://github.com/yjh031201/SOLEFN.git   
 
 # 깃에 올리는 법
 > git add .   

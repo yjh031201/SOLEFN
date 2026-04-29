@@ -23,7 +23,7 @@ export default function MyPage() {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
   return (
-    <div className="container">
+    <div className="mypagecontainer">
       <Header
         onCategoryClick={() => setIsCategoryOpen(true)}
         onAlarmClick={() => setIsAlarmOpen(true)}
@@ -31,12 +31,12 @@ export default function MyPage() {
       <CategoryPanel isOpen={isCategoryOpen} onClose={() => setIsCategoryOpen(false)} />
       <AlarmPanel isOpen={isAlarmOpen} onClose={() => setIsAlarmOpen(false)} />
 
-      <div className="content">
+      <div className="mypagecontent">
         {/* 좌측 메뉴 */}
         <Sidebar title="마이페이지" menus={menus} link="/mypage" />
 
         {/* 메인 영역 */}
-        <main className="main">
+        <main className="mypagemain">
           {/* 사용자 정보 */}
 
           <div className="user-box">

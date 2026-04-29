@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AlarmPanel from "../components/AlarmPanel";
 import NavBar from "../components/NavBar";
+import MainHero from "../assets/images/mainimage.png";
 
 export default function HomePage() {
   //더미 데이터
@@ -164,7 +165,7 @@ export default function HomePage() {
 
             <div className="hero-overlay">
               <p className="hero-small">새로운 브랜드</p>
-              <h1 className="hero-title">뉴발란스</h1>
+              <h1 className="hero-title">나이키</h1>
               <p className="hero-desc">
                 다양한 판매처의 가격을 비교하고
                 <br />
@@ -173,11 +174,7 @@ export default function HomePage() {
               <button className="hero-cta">최저가 보러가기</button>
             </div>
 
-            <img
-              className="hero-image"
-              src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?q=80&w=1600&auto=format&fit=crop"
-              alt="메인 신발 배너"
-            />
+            <img className="hero-image" src={MainHero} alt="메인 신발 배너" />
 
             <button className="slide-btn right" aria-label="다음">
               ›
@@ -194,8 +191,10 @@ export default function HomePage() {
           {/* 슬로건 섹션 */}
           <section className="slogan-section">
             <h2>모든 가격을 넘어, 단 하나의 최선으로</h2>
-            <p>수천 개의 가격 데이터가 정돈된 하나의 선명한 결론, <br />
-              비교의 수고로움이 사라진 자리에 채워지는 쇼핑의 즐거움</p>
+            <p>
+              수천 개의 가격 데이터가 정돈된 하나의 선명한 결론, <br />
+              비교의 수고로움이 사라진 자리에 채워지는 쇼핑의 즐거움
+            </p>
           </section>
           {/* 프로모션 섹션 */}
           <section className="promo-section">

@@ -6,6 +6,7 @@ import ProductDetail from "../pages/ProductDetail";
 import SearchBox from "../pages/SearchBox";
 import SearchResultPage from "../pages/SearchResultPage.tsx";
 import Login from "../pages/Login.jsx";
+import Signup from "../pages/Signup.jsx";
 
 export default function Router() {
   return (
@@ -15,6 +16,7 @@ export default function Router() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/customer" element={<CustomerCenter />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/search" element={<SearchBox />} />
         <Route path="/search/result" element={<SearchResultPage />} />
         <Route path="/product/:id" element={<ProductDetail />} />

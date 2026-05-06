@@ -174,11 +174,7 @@ export default function HomePage() {
               <button className="hero-cta">최저가 보러가기</button>
             </div>
 
-            <img
-              className="hero-image"
-              src={MainHero}
-              alt="메인 신발 배너"
-            />
+            <img className="hero-image" src={MainHero} alt="메인 신발 배너" />
 
             <button className="slide-btn right" aria-label="다음">
               ›
@@ -195,8 +191,10 @@ export default function HomePage() {
           {/* 슬로건 섹션 */}
           <section className="slogan-section">
             <h2>모든 가격을 넘어, 단 하나의 최선으로</h2>
-            <p>수천 개의 가격 데이터가 정돈된 하나의 선명한 결론, <br />
-              비교의 수고로움이 사라진 자리에 채워지는 쇼핑의 즐거움</p>
+            <p>
+              수천 개의 가격 데이터가 정돈된 하나의 선명한 결론, <br />
+              비교의 수고로움이 사라진 자리에 채워지는 쇼핑의 즐거움
+            </p>
           </section>
           {/* 프로모션 섹션 */}
           <section className="promo-section">

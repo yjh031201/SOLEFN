@@ -4,11 +4,56 @@ import Footer from '../components/Footer';
 import '../assets/css/ProductDetail.css';
 import CategoryPanel from '../components/CategoryPanel';
 import AlarmPanel from '../components/AlarmPanel';
+import PriceChart from '../components/PriceChart';
+
 
 export default function ProductDetail() {
   const [activeTab, setActiveTab] = useState('spec');
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+  const [chartPeriod, setChartPeriod] = useState('1M');
+
+  //그래프 더미데이터
+  const priceDataByPeriod = {
+    '1M': [
+      { date: '11-01', price: 142000 },
+      { date: '11-04', price: 139000 },
+      { date: '11-07', price: 138500 },
+      { date: '11-10', price: 135000 },
+      { date: '11-13', price: 137000 },
+      { date: '11-16', price: 132000 },
+      { date: '11-19', price: 130000 },
+      { date: '11-22', price: 128000 },
+      { date: '11-25', price: 131000 },
+      { date: '11-28', price: 129000 },
+      { date: '12-01', price: 127000 },
+      { date: '12-04', price: 127000 },
+    ],
+    '3M': [
+      { date: '09', price: 149000 },
+      { date: '10', price: 145000 },
+      { date: '11', price: 135000 },
+      { date: '12', price: 127000 },
+    ],
+    '6M': [
+      { date: '06', price: 159000 },
+      { date: '07', price: 155000 },
+      { date: '08', price: 152000 },
+      { date: '09', price: 149000 },
+      { date: '10', price: 145000 },
+      { date: '11', price: 135000 },
+      { date: '12', price: 127000 },
+    ],
+    '1Y': [
+      { date: '23.12', price: 168000 },
+      { date: '24.02', price: 165000 },
+      { date: '24.04', price: 162000 },
+      { date: '24.06', price: 159000 },
+      { date: '24.08', price: 152000 },
+      { date: '24.10', price: 145000 },
+      { date: '24.12', price: 127000 },
+    ],
+  };
 
   return (
     <>
@@ -62,6 +107,29 @@ export default function ProductDetail() {
             </section>
 
             {/* 그래프 영역 */}
+            <section className="price-chart-section">
+              <h3>가격 추이</h3>
+
+              <div className="chart-period-tabs">
+                {['1M', '3M', '6M', '1Y'].map((period) => (
+                  <button
+                    key={period}
+                    className={chartPeriod === period ? 'active' : ''}
+                    onClick={() => setChartPeriod(period)}
+                  >
+                    {period === '1M' ? '1개월'
+                      : period === '3M' ? '3개월'
+                        : period === '6M' ? '6개월'
+                          : '1년'}
+                  </button>
+                ))}
+              </div>
+              <PriceChart
+                key={chartPeriod}
+                data={priceDataByPeriod[chartPeriod]}
+                currentPrice={47348}
+              />
+            </section>
 
             <div className="action-section">
               <button className="btn-notify">

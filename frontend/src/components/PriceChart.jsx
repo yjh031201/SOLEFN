@@ -1,3 +1,5 @@
+import "../assets/css/PriceChart.css";
+
 import {
   LineChart,
   Line,
@@ -90,6 +92,18 @@ export default function PriceChart({ data, currentPrice }) {
               fontSize: 11,
             }}
           />
+           <ReferenceLine
+              y={currentPrice}
+              stroke="#f15746"
+              strokeWidth={1.5}
+              label={{
+                value: `현재 ${currentPrice.toLocaleString("ko-KR")}원`,
+                position: "left",
+                fill: "#f15746",
+                fontSize: 12,
+                fontWeight: "bold",
+              }}
+            />
           <Line
             type="monotone"
             dataKey="price"
@@ -97,6 +111,7 @@ export default function PriceChart({ data, currentPrice }) {
             strokeWidth={2.5}
             dot={{ fill: "#4079f2", r: 3 }}
             activeDot={{ r: 6 }}
+            isAnimationActive={false}
           />
         </LineChart>
       </ResponsiveContainer>

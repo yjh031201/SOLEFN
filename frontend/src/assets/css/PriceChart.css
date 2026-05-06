@@ -1,0 +1,84 @@
+/* 가격 차트 영역 */
+.price-chart-section {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 40px 0 60px;
+  margin-bottom: 40px;
+}
+
+.price-chart-section h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.price-chart-wrapper {
+  width: 100%;
+}
+
+/* 차트 위 통계 (최저/평균/최고) */
+.chart-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #888;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.stat-value.low {
+  color: #4079f2;
+}
+
+.stat-value.high {
+  color: #f15746;
+}
+
+/* 기간 선택 탭 */
+.chart-period-tabs {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chart-period-tabs button {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chart-period-tabs button.active {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.chart-period-tabs button:hover:not(.active) {
+  background: #f5f5f5;
+}

@@ -23,7 +23,7 @@ const formFields = [
 const footerLinks = [
   { label: "비밀번호 찾기", href: "#" },
   { label: "아이디 찾기", href: "#" },
-  { label: "회원가입", href: "#" },
+  { label: "회원가입", href: "/singup" },
 ];
 
 export default function Login() {

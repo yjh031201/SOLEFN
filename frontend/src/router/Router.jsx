@@ -6,6 +6,7 @@ import ProductDetail from "../pages/ProductDetail";
 import SearchBox from "../pages/SearchBox";
 import SearchResultPage from "../pages/SearchResultPage.tsx";
 import Login from "../pages/Login.jsx";
+import SingUp from "../pages/SingUp.jsx";
 
 export default function Router() {
   return (
@@ -18,6 +19,7 @@ export default function Router() {
         <Route path="/search" element={<SearchBox />} />
         <Route path="/search/result" element={<SearchResultPage />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/singup" element={<SingUp />} />
       </Routes>
     </BrowserRouter>
   );

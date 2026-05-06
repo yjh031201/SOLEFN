@@ -4,6 +4,6 @@ import java.util.List;
 
 public record SearchResponse(
         int total,
-        List<ShoeItem> items,
+        List<GroupedShoeItem> items,
         boolean hasMore
 ) {}

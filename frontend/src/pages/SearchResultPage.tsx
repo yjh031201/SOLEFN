@@ -5,6 +5,7 @@ import "../assets/css/SearchResult.css";
 import Header from "../components/Header";
 import CategoryPanel from "../components/CategoryPanel";
 import AlarmPanel from "../components/AlarmPanel";
+import { addRecentSearch } from "../utils/recentSearches";
 
 interface Product {
   id: string;
@@ -56,6 +57,9 @@ const SearchResultPage: React.FC = () => {
   const [hasMore, setHasMore] = useState<boolean>(false);
 
   // 검색어가 변경되면 초기화
+  useEffect(() => {
+    if (keyword) addRecentSearch(keyword);
+  }, [keyword]);
   useEffect(() => {
     if (!keyword) {
       setProducts([]);
@@ -353,9 +357,8 @@ const SearchResultPage: React.FC = () => {
                   <div className="brand-row">
                     <span className="brand">{brandText}</span>
                     <span
-                      className={`material-symbols-outlined wish-icon ${
-                        isWished ? "active" : ""
-                      }`}
+                      className={`material-symbols-outlined wish-icon ${isWished ? "active" : ""
+                        }`}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();

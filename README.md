@@ -22,3 +22,14 @@
 
 # 새 브랜치 만드는 법
 >git checkout -b 새브랜치
+
+# 프론트, 백, 도커 실행
+>solefn -> npm install   
+>solefn -> docker-compose up -d mysql   
+>solefn -> npm run dev:local   
+
+# DB확인
+>PowerShell에서 solefn 경로로 이동   
+>docker ps로 컨테이너 생성 확인   
+>docker exec -it solefn-mysql mysql -u root -p1234 solefn_db mysql 접속   
+>use solefn_db로 데이터베이스 연결   

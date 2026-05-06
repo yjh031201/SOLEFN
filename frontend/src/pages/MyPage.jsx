@@ -1,14 +1,16 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../assets/css/MyPage.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import { useState } from "react";
 import CategoryPanel from "../components/CategoryPanel";
 import AlarmPanel from "../components/AlarmPanel";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function MyPage() {
+  const { user, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const menus = [
     {
@@ -20,76 +22,77 @@ export default function MyPage() {
       items: ["로그인 정보", "프로필 정보"]
     }
   ];
+
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+
+  // 로그인 안 된 사용자는 로그인 페이지로 (lazy init이 아니라 useEffect 사용)
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
+  // 로그인 안 된 상태면 화면 안 그림 (리다이렉트되기 전)
+  if (!isLoggedIn || !user) {
+    return null;
+  }
+
   return (
-    <div className="mypagecontainer">
-      <Header
-        onCategoryClick={() => setIsCategoryOpen(true)}
-        onAlarmClick={() => setIsAlarmOpen(true)}
-      />
-      <CategoryPanel isOpen={isCategoryOpen} onClose={() => setIsCategoryOpen(false)} />
-      <AlarmPanel isOpen={isAlarmOpen} onClose={() => setIsAlarmOpen(false)} />
+      <div className="mypagecontainer">
+        <Header
+            onCategoryClick={() => setIsCategoryOpen(true)}
+            onAlarmClick={() => setIsAlarmOpen(true)}
+        />
+        <CategoryPanel isOpen={isCategoryOpen} onClose={() => setIsCategoryOpen(false)} />
+        <AlarmPanel isOpen={isAlarmOpen} onClose={() => setIsAlarmOpen(false)} />
 
-      <div className="mypagecontent">
-        {/* 좌측 메뉴 */}
-        <Sidebar title="마이페이지" menus={menus} link="/mypage" />
+        <div className="mypagecontent">
+          <Sidebar title="마이페이지" menus={menus} link="/mypage" />
 
-        {/* 메인 영역 */}
-        <main className="mypagemain">
-          {/* 사용자 정보 */}
-
-          <div className="user-box">
-            <div className="left-group">
-              <div className="user-profile">
-
+          <main className="mypagemain">
+            <div className="user-box">
+              <div className="left-group">
+                <div className="user-profile"></div>
+                <div className="user-info">
+                  <strong>{user.name}</strong>
+                  <p>{user.email}</p>
+                </div>
               </div>
-              <div className="user-info">
-                <strong>홍길동</strong>
-                <p>example@email.com</p>
-              </div>
-
-            </div>
-            <div className="user-bottons">
-              <button>프로필 관리</button>
-              <button>내 스타일</button>
-            </div>
-          </div>
-
-          {/* 최근 본 상품 */}
-          <section className="section">
-            <h3>최근 본 상품</h3>
-
-            <div className="item">
-
-              <div>
-                <p>Apple 2022 MacBook Air</p>
-                <span>100원</span>
+              <div className="user-bottons">
+                <button>프로필 관리</button>
+                <button>내 스타일</button>
               </div>
             </div>
 
-            <div className="item">
+            <section className="section">
+              <h3>최근 본 상품</h3>
 
-              <div>
-                <p>Louis Vuitton Belt</p>
-                <span>100원</span>
+              <div className="item">
+                <div>
+                  <p>Apple 2022 MacBook Air</p>
+                  <span>100원</span>
+                </div>
               </div>
-            </div>
 
-            <div className="item">
-
-              <div>
-                <p>Adidas Sneakers</p>
-                <span>100원</span>
+              <div className="item">
+                <div>
+                  <p>Louis Vuitton Belt</p>
+                  <span>100원</span>
+                </div>
               </div>
-            </div>
-          </section>
-        </main>
+
+              <div className="item">
+                <div>
+                  <p>Adidas Sneakers</p>
+                  <span>100원</span>
+                </div>
+              </div>
+            </section>
+          </main>
+        </div>
+
+        <Footer />
       </div>
-
-      <Footer />
-    </div>
   );
 }
-
-

@@ -24,8 +24,16 @@ dist-ssr
 
 # Environment variables
 .env
+.env.*
+!.env.example
 .env.local
 .env.production
+
+# MySQL data volume (로컬 DB 데이터)
+mysql_data/
+
+# OS
+Thumbs.db
 
 # Editor directories and files
 .vscode/*

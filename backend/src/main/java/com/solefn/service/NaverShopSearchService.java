@@ -20,6 +20,70 @@ import java.util.Objects;
 
 @Service
 public class NaverShopSearchService {
+    private static final Pattern MODEL_CODE_PATTERN =
+            Pattern.compile("[A-Z]{2,4}[-_]?\\d{3,5}[-_]?\\d{0,4}");
+
+    // 브랜드 정규화 매핑
+    private static final Map<String, String> BRAND_MAP = Map.ofEntries(
+            Map.entry("나이키", "NIKE"),
+            Map.entry("nike", "NIKE"),
+            Map.entry("아디다스", "ADIDAS"),
+            Map.entry("adidas", "ADIDAS"),
+            Map.entry("뉴발란스", "NEWBALANCE"),
+            Map.entry("newbalance", "NEWBALANCE"),
+            Map.entry("new balance", "NEWBALANCE"),
+            Map.entry("아식스", "ASICS"),
+            Map.entry("asics", "ASICS"),
+            Map.entry("컨버스", "CONVERSE"),
+            Map.entry("converse", "CONVERSE"),
+            Map.entry("반스", "VANS"),
+            Map.entry("vans", "VANS"),
+            Map.entry("푸마", "PUMA"),
+            Map.entry("puma", "PUMA")
+    );
+
+    // 모델 코드 추출
+    private String extractModelCode(String title) {
+        String cleaned = title.replaceAll("<[^>]*>", ""); // <b> 태그 제거
+        Matcher m = MODEL_CODE_PATTERN.matcher(cleaned.toUpperCase());
+        return m.find() ? m.group() : null;
+    }
+
+    // 브랜드 정규화
+    private String normalizeBrand(String brand, String title) {
+        String source = (brand != null && !brand.isBlank())
+                ? brand.toLowerCase()
+                : title.toLowerCase();
+
+        for (Map.Entry<String, String> entry : BRAND_MAP.entrySet()) {
+            if (source.contains(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        return brand != null ? brand.toUpperCase() : "UNKNOWN";
+    }
+
+    // 그룹키 생성 (핵심!)
+    private String makeGroupKey(NaverItem item) {
+        String brand = normalizeBrand(item.getBrand(), item.getTitle());
+        String modelCode = extractModelCode(item.getTitle());
+
+        if (modelCode != null) {
+            return brand + "|" + modelCode;
+        }
+
+        // fallback: productId 단독
+        return "SINGLE|" + item.getProductId();
+    }
+    // 그룹핑 결과
+    Map<String, List<NaverItem>> grouped = items.stream()
+            .collect(Collectors.groupingBy(this::makeGroupKey));
+
+    // 각 그룹을 GroupedShoeItem으로 변환
+    List<GroupedShoeItem> result = grouped.entrySet().stream()
+            .map(entry -> toGroupedItem(entry.getKey(), entry.getValue()))
+            .sorted(Comparator.comparing(GroupedShoeItem::getLowestPrice))
+            .toList();
 
     private static final String NAVER_SHOP_API_URL = "https://openapi.naver.com/v1/search/shop.json";
     private static final int LIMIT = 50;

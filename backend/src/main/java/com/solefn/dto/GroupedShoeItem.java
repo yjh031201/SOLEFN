@@ -13,5 +13,6 @@ public record GroupedShoeItem(
         String category2,
         String category3,
         int storeCount,
-        List<ShoeItem> stores
+        List<ShoeItem> stores,
+        List<ColorVariant> variants
 ) {}

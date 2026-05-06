@@ -24,7 +24,7 @@
 >git checkout -b 새브랜치
 
 # 프론트, 백, 도커 실행
->solefn -> npm install
+>solefn -> npm install   
 >solefn -> npm run dev:all
 
 # DB확인

@@ -24,9 +24,8 @@
 >git checkout -b 새브랜치
 
 # 프론트, 백, 도커 실행
->solefn -> npm install   
->solefn -> docker-compose up -d mysql   
->solefn -> npm run dev:local   
+>solefn -> npm install
+>solefn -> npm run dev:all
 
 # DB확인
 >PowerShell에서 solefn 경로로 이동   

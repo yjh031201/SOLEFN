@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/SearchBox.css";
+import {
+  getRecentSearches,
+  addRecentSearch,
+  removeRecentSearch,
+  clearRecentSearches,
+} from "../utils/recentSearches";
 
 const popularKeywords = [
   { rank: 1, keyword: "아디다스", trend: "up" },
@@ -12,18 +18,18 @@ const popularKeywords = [
 
 export default function SearchPage() {
   const [inputValue, setInputValue] = useState("");
-  const [recentList, setRecentList] = useState([]);
-   const navigate = useNavigate();
+  const [recentList, setRecentList] = useState(() => getRecentSearches());
+  const navigate = useNavigate();
+
 
   const handleSearch = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
-    setRecentList((prev) => {
-      const filtered = prev.filter((item) => item !== trimmed);
-      return [trimmed, ...filtered];
-    });
+    
+    addRecentSearch(trimmed);              // localStorage에 저장
+    setRecentList(getRecentSearches());    // 화면 갱신
     setInputValue("");
-     navigate(`/search/result?q=${encodeURIComponent(trimmed)}`);
+    navigate(`/search/result?q=${encodeURIComponent(trimmed)}`);
   };
 
   const handleKeyDown = (e) => {
@@ -31,10 +37,18 @@ export default function SearchPage() {
   };
 
   const removeRecent = (keyword) => {
-    setRecentList((prev) => prev.filter((item) => item !== keyword));
+    removeRecentSearch(keyword);           // localStorage에서 삭제
+    setRecentList(getRecentSearches());    // 화면 갱신
+  };
+
+  const handleClearAll = () => {
+    clearRecentSearches();
+    setRecentList([]);
   };
 
   const handleKeywordClick = (keyword) => {
+    addRecentSearch(keyword);              // 인기검색어 클릭도 최근검색어로 저장
+    setRecentList(getRecentSearches());
     navigate(`/search/result?q=${encodeURIComponent(keyword)}`);
   };
 
@@ -61,14 +75,21 @@ export default function SearchPage() {
 
       {/* 최근 검색어 */}
       <div style={styles.section}>
-        <h2 style={styles.sectionTitle}>최근 검색어</h2>
+        <div style={styles.sectionHeader}>
+          <h2 style={styles.sectionTitle}>최근 검색어</h2>
+          {recentList.length > 0 && (
+            <button onClick={handleClearAll} style={styles.clearAllBtn}>
+              전체삭제
+            </button>
+          )}
+        </div>
         <ul style={styles.recentList}>
           {recentList.length === 0 ? (
             <li style={styles.emptyText}>최근 검색어가 없습니다.</li>
           ) : (
             recentList.map((keyword) => (
               <li key={keyword} style={styles.recentItem}>
-                 <span
+                <span
                   style={{ cursor: "pointer" }}
                   onClick={() => handleKeywordClick(keyword)}
                 >
@@ -91,7 +112,11 @@ export default function SearchPage() {
         <h2 style={styles.sectionTitle}>인기 검색어</h2>
         <ul style={styles.rankList}>
           {popularKeywords.map(({ rank, keyword, trend }) => (
-            <li key={rank} style={styles.rankItem} onClick={() => handleKeywordClick(keyword)}>
+            <li
+              key={rank}
+              style={styles.rankItem}
+              onClick={() => handleKeywordClick(keyword)}
+            >
               <span style={styles.rank}>{rank}</span>
               <span style={styles.keyword}>{keyword}</span>
               <span style={trend === "up" ? styles.arrowUp : styles.arrowDown}>
@@ -128,6 +153,20 @@ const styles = {
     fontSize: "16px",
     background: "transparent",
   },
+  sectionHeader: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: "10px",
+},
+clearAllBtn: {
+  background: "none",
+  border: "none",
+  color: "#888",
+  fontSize: "13px",
+  cursor: "pointer",
+  textDecoration: "underline",
+},
   searchIcon: {
     cursor: "pointer",
     color: "#555",

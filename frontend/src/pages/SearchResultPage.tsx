@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/SearchResult.css";
 import Header from "../components/Header";
@@ -7,16 +7,32 @@ import CategoryPanel from "../components/CategoryPanel";
 import AlarmPanel from "../components/AlarmPanel";
 import { addRecentSearch } from "../utils/recentSearches";
 
-interface Product {
+interface ShoeItem {
   id: string;
   title: string;
-  price: string; // 네이버 lprice (숫자 문자열)
+  price: string;
   image: string;
   link: string;
   mallName: string;
   brand: string;
   category2: string;
   category3: string;
+}
+
+interface ColorVariant {
+  id: string;
+  color: string;
+  lowestPrice: string;
+  image: string;
+  link: string;
+  mallName: string;
+  stores: ShoeItem[];
+}
+
+interface Product extends ShoeItem {
+  storeCount: number;
+  stores: ShoeItem[];
+  variants: ColorVariant[];
 }
 
 interface ColorOption {
@@ -334,10 +350,9 @@ const SearchResultPage: React.FC = () => {
             const isWished = wishList.includes(item.id);
             const brandText = item.brand?.trim() || item.mallName || "Shop";
             return (
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to={`/product/${item.id}`}
+                state={item}
                 className="product-card"
                 key={item.id}
                 style={{ textDecoration: "none", color: "inherit" }}
@@ -379,7 +394,7 @@ const SearchResultPage: React.FC = () => {
                     )}
                   </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
 

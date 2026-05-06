@@ -19,10 +19,15 @@
 >git pull origin master   
 >git checkout 브랜치 이름   
 >git merge master   
+> ESC누르고 :wq
+
 
 # 새 브랜치 만드는 법
 >git checkout -b 새브랜치
 
+
+
+서버끌떄 컨트롤 c
 # 프론트, 백, 도커 실행
 >solefn -> npm install   
 >solefn -> npm run dev:all
@@ -32,3 +37,5 @@
 >docker ps로 컨테이너 생성 확인   
 >docker exec -it solefn-mysql mysql -u root -p1234 solefn_db mysql 접속   
 >use solefn_db로 데이터베이스 연결   
+
+

@@ -1,4 +1,4 @@
-import "../assets/css/PriceChart.css";
+import "../../assets/css/PriceChart.css";
 
 import {
   LineChart,

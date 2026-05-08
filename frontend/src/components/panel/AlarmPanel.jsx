@@ -1,4 +1,4 @@
-import "../assets/css/AlarmPanel.css";
+import "../../assets/css/AlarmPanel.css";
 
 export default function AlarmPanel({ isOpen, onClose }) {
   return (

@@ -1,4 +1,4 @@
-import "../assets/css/CategoryPanel.css";
+import "../../assets/css/CategoryPanel.css";
 
 const categoryData = {
   "신발종류": [

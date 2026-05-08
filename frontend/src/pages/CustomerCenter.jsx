@@ -1,11 +1,11 @@
 import React from "react";
 import "../assets/css/CustomerCenter.css";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Sidebar from "../components/Sidebar";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import Sidebar from "../components/layout/Sidebar";
 import { useState } from "react";
-import CategoryPanel from "../components/CategoryPanel";
-import AlarmPanel from "../components/AlarmPanel";
+import CategoryPanel from "../components/panel/CategoryPanel";
+import AlarmPanel from "../components/panel/AlarmPanel";
 
 export default function CustomerCenter() {
 

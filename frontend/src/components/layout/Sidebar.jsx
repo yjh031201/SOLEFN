@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../assets/css/Sidebar.css";
+import "../../assets/css/Sidebar.css";
 
 
 

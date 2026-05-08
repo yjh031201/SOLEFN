@@ -1,5 +1,5 @@
 import TopBar from "./TopBar";
-import "../assets/css/Header.css";
+import "../../assets/css/Header.css";
 
 export default function Header({ onCategoryClick, onAlarmClick }) {
   return (

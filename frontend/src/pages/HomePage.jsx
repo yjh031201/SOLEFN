@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AlarmPanel from "../components/AlarmPanel";
 import NavBar from "../components/NavBar";
-import MainHero from "../assets/images/mainimage.jpg";
+import MainHero from "../assets/images/Untitled.png";
 
 export default function HomePage() {
   //더미 데이터
@@ -164,12 +164,12 @@ export default function HomePage() {
             </button>
 
             <div className="hero-overlay">
-              <p className="hero-small">새로운 브랜드</p>
+              <p className="hero-small">어디서나 편안한</p>
               <h1 className="hero-title">나이키</h1>
               <p className="hero-desc">
-                다양한 판매처의 가격을 비교하고
+                당신의 모든 걸음이 가벼워질 수 있게,
                 <br />
-                원하는 신발의 최저가를 찾아보세요.
+                가장 합리적인 선택을 도와드립니다.
               </p>
               <button className="hero-cta">최저가 보러가기</button>
             </div>

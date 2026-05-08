@@ -1,7 +1,7 @@
 /* NavBar - 홈페이지 전용 */
 .category-nav {
   position: static;
-  top: 90px;        /* 탑바 바로 아래 */
+  top: 90px; /* 탑바 바로 아래 */
   left: 0;
   width: 100%;
   height: 52px;
@@ -38,24 +38,35 @@
   background: var(--dark-teal);
 }
 
-
-
 .hero-image {
-  
   width: 100%;
   height: 100%;
+
+  /* 1. 이 속성을 반드시 추가하세요 */
   object-fit: cover;
+
+  /* 2. 이미지가 위쪽 기준으로 꽉 차게 하려면 현재 속성 유지 */
   object-position: center top;
   opacity: 0.86;
 }
 
 .hero-overlay {
   position: absolute;
-  top: 52%;
-  left: 100px;
-  transform: translateY(-50%);
+  /* 가로, 세로 50% 지점으로 이동 */
+  top: 50%;
+  left: 50%;
+
+  /* 요소의 중심을 정확히 중앙에 맞춤 */
+  transform: translate(-50%, -10%);
+
+  /* 글자 자체도 중앙 정렬 */
+  text-align: center;
+
   z-index: 2;
   color: #fff;
+
+  /* 필요하다면 너비를 지정해 글자가 퍼지게 함 */
+  width: 100%;
 }
 
 .hero-small {
@@ -105,8 +116,12 @@
   cursor: pointer;
 }
 
-.slide-btn.left  { left: 28px; }
-.slide-btn.right { right: 28px; }
+.slide-btn.left {
+  left: 28px;
+}
+.slide-btn.right {
+  right: 28px;
+}
 
 .sub-hero-section {
   position: relative;
@@ -251,20 +266,39 @@
 
 /* ===== 반응형 ===== */
 @media (max-width: 1024px) {
-  .hero-section  { height: 470px; }
-  .hero-overlay  { left: 60px; top: 90px; }
-  .hero-small    { font-size: 22px; }
-  .hero-title    { font-size: 60px; }
+  .hero-section {
+    height: 470px;
+  }
+  .hero-overlay {
+    left: 60px;
+    top: 90px;
+  }
+  .hero-small {
+    font-size: 22px;
+  }
+  .hero-title {
+    font-size: 60px;
+  }
 
-  .promo-grid { grid-template-columns: 1fr; }
+  .promo-grid {
+    grid-template-columns: 1fr;
+  }
 
   .brand-grid,
-  .category-grid { grid-template-columns: repeat(3, 1fr); }
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-  .hero-section  { height: 100vh; }
-  .hero-overlay  { left: 24px; top: 55%; transform: translateY(-50%); }
+  .hero-section {
+    height: 100vh;
+  }
+  .hero-overlay {
+    left: 24px;
+    top: 55%;
+    transform: translateY(-50%);
+  }
 
   .sub-hero-section {
     height: 55vh;

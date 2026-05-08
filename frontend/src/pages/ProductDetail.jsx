@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import '../assets/css/ProductDetail.css';
-import CategoryPanel from '../components/CategoryPanel';
-import AlarmPanel from '../components/AlarmPanel';
-import PriceChart from '../components/PriceChart';
+import CategoryPanel from '../components/panel/CategoryPanel';
+import AlarmPanel from '../components/panel/AlarmPanel';
+import PriceChart from '../components/product/PriceChart';
 
 export default function ProductDetail() {
   const { state: product } = useLocation();
-  const { id } = useParams();
   const navigate = useNavigate();
 
   const variants = product?.variants ?? [];

@@ -1,4 +1,4 @@
-import "../assets/css/HomePage.css";
+import "../../assets/css/HomePage.css";
 
 export default function NavBar() {
   return (

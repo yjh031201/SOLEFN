@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/MyPage.css";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Sidebar from "../components/Sidebar";
-import CategoryPanel from "../components/CategoryPanel";
-import AlarmPanel from "../components/AlarmPanel";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import Sidebar from "../components/layout/Sidebar.jsx";
+import CategoryPanel from "../components/panel/CategoryPanel.jsx";
+import AlarmPanel from "../components/panel/AlarmPanel.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function MyPage() {

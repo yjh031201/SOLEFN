@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import solefn from "../assets/images/SOLEFN.png";
-import search from "../assets/images/search.svg";
-import notification from "../assets/images/notification.svg";
-import category from "../assets/images/category.svg";
+import { useAuth } from "../../context/AuthContext";
+import solefn from "../../assets/images/SOLEFN.png";
+import search from "../../assets/images/search.svg";
+import notification from "../../assets/images/notification.svg";
+import category from "../../assets/images/category.svg";
 
 export default function TopBar({ onCategoryClick, onAlarmClick }) {
   const navigate = useNavigate();

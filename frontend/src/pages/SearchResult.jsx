@@ -1,91 +1,43 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/SearchResult.css";
-import Header from "../components/Header";
-import CategoryPanel from "../components/CategoryPanel";
-import AlarmPanel from "../components/AlarmPanel";
+import Header from "../components/layout/Header";
+import CategoryPanel from "../components/panel/CategoryPanel";
+import AlarmPanel from "../components/panel/AlarmPanel";
 import { addRecentSearch } from "../utils/recentSearches";
 
-interface ShoeItem {
-  id: string;
-  title: string;
-  price: string;
-  image: string;
-  link: string;
-  mallName: string;
-  brand: string;
-  category2: string;
-  category3: string;
-}
-
-interface ColorVariant {
-  id: string;
-  color: string;
-  lowestPrice: string;
-  image: string;
-  link: string;
-  mallName: string;
-  stores: ShoeItem[];
-}
-
-interface Product extends ShoeItem {
-  storeCount: number;
-  stores: ShoeItem[];
-  variants: ColorVariant[];
-}
-
-interface ColorOption {
-  name: string;
-  hex: string;
-}
-
-type SortKey = "인기순" | "관심순" | "판매일순" | "높은가격순" | "낮은가격순";
-
-const SearchResultPage: React.FC = () => {
+export default function SearchResult() {
   // --- [URL 쿼리] ---
   const [searchParams] = useSearchParams();
   const keyword = (searchParams.get("q") || "").trim();
 
   // --- [상태 관리] ---
-  const [activeModal, setActiveModal] = useState<
-    "color" | "price" | "size" | null
-  >(null);
-  const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
-  const [currentSort, setCurrentSort] = useState<SortKey>("인기순");
-  const [wishList, setWishList] = useState<string[]>([]);
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [activeModal, setActiveModal] = useState(null);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [currentSort, setCurrentSort] = useState("인기순");
+  const [wishList, setWishList] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 
   // 추가된 상태: '직접입력' 라디오가 체크되었는지 확인
-  const [isDirectInputMode, setIsDirectInputMode] = useState<boolean>(false);
+  const [isDirectInputMode, setIsDirectInputMode] = useState(false);
 
   // <!-- 헤더 상태 -->
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
 
   // --- [상품 데이터(API)] ---
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loadingMore, setLoadingMore] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>("");
-  const [offset, setOffset] = useState<number>(0);
-  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
 
   // 검색어가 변경되면 초기화
   useEffect(() => {
     if (keyword) addRecentSearch(keyword);
-  }, [keyword]);
-  useEffect(() => {
-    if (!keyword) {
-      setProducts([]);
-      setErrorMsg("");
-      setOffset(0);
-      setHasMore(false);
-      return;
-    }
-    setOffset(0);
-    setProducts([]);
   }, [keyword]);
 
   // 상품 데이터 페칭
@@ -111,7 +63,7 @@ const SearchResultPage: React.FC = () => {
         });
         if (cancelled) return;
 
-        const newItems: Product[] = res.data?.items ?? [];
+        const newItems = res.data?.items ?? [];
         const nextHasMore = res.data?.hasMore ?? false;
 
         setHasMore(nextHasMore);
@@ -120,7 +72,7 @@ const SearchResultPage: React.FC = () => {
         } else {
           setProducts((prev) => [...prev, ...newItems]);
         }
-      } catch (err: any) {
+      } catch (err) {
         if (axios.isCancel(err) || err.name === "CanceledError") return;
         if (cancelled) return;
         console.error(err);
@@ -173,7 +125,7 @@ const SearchResultPage: React.FC = () => {
   }, [products, currentSort, isDirectInputMode, priceRange]);
 
   // --- [데이터(필터용 상수)] ---
-  const colorData: ColorOption[] = [
+  const colorData = [
     { name: "라벤더", hex: "#A58FCF" },
     { name: "민트", hex: "#81CBB0" },
     { name: "오렌지", hex: "#E85C2E" },
@@ -186,7 +138,7 @@ const SearchResultPage: React.FC = () => {
     { name: "오트밀", hex: "#EAE7D6" },
   ];
 
-  const sizes: string[] = [
+  const sizes = [
     "220 이하",
     "225",
     "230",
@@ -205,22 +157,19 @@ const SearchResultPage: React.FC = () => {
   ];
 
   // --- [이벤트 핸들러] ---
-  const toggleWish = (id: string) => {
+  const toggleWish = (id) => {
     setWishList((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
-  const toggleColor = (name: string) => {
+  const toggleColor = (name) => {
     setSelectedColors((prev) =>
       prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name],
     );
   };
 
-  const handlePriceInput = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "min" | "max",
-  ) => {
+  const handlePriceInput = (e, type) => {
     // 직접입력 모드일 때만 숫자 로직 작동
     if (!isDirectInputMode) return;
     const value = e.target.value.replace(/[^0-9]/g, "");
@@ -233,7 +182,7 @@ const SearchResultPage: React.FC = () => {
     setActiveModal(null);
   };
 
-  const formatPrice = (price: string) => {
+  const formatPrice = (price) => {
     const num = Number(price);
     if (Number.isNaN(num)) return price;
     return `${num.toLocaleString("ko-KR")}원`;
@@ -291,15 +240,13 @@ const SearchResultPage: React.FC = () => {
             </div>
             {isSortOpen && (
               <div className="sort-dropdown show">
-                {(
-                  [
-                    "인기순",
-                    "관심순",
-                    "판매일순",
-                    "높은가격순",
-                    "낮은가격순",
-                  ] as SortKey[]
-                ).map((item) => (
+                {[
+                  "인기순",
+                  "관심순",
+                  "판매일순",
+                  "높은가격순",
+                  "낮은가격순",
+                ].map((item) => (
                   <div
                     key={item}
                     className="sort-item"
@@ -559,6 +506,4 @@ const SearchResultPage: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default SearchResultPage;
+}

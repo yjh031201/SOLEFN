@@ -1,10 +1,10 @@
 import { useState } from "react";
 import "../assets/css/HomePage.css";
-import CategoryPanel from "../components/CategoryPanel";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import AlarmPanel from "../components/AlarmPanel";
-import NavBar from "../components/NavBar";
+import CategoryPanel from "../components/panel/CategoryPanel";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import AlarmPanel from "../components/panel/AlarmPanel";
+import NavBar from "../components/layout/NavBar";
 import MainHero from "../assets/images/Untitled.png";
 
 export default function HomePage() {

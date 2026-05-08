@@ -12,8 +12,14 @@
     margin-bottom: 60px;
 }
 
-.product-image {
+.product-image-wrapper {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.product-image {
     background-color: #f9f9f9;
     min-height: 400px;
     display: flex;
@@ -23,6 +29,32 @@
 
 .product-image img {
     max-width: 100%;
+}
+
+.color-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.color-btn {
+    padding: 6px 14px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+}
+
+.color-btn:hover {
+    border-color: #333;
+}
+
+.color-btn.active {
+    background: #333;
+    color: #fff;
+    border-color: #333;
 }
 
 .price-comparison {

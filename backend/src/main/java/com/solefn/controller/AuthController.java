@@ -27,6 +27,17 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    /**
+     * 아이디 중복확인
+     * GET /api/auth/check-username?username=xxx
+     * 응답: { "available": true/false }
+     */
+    @GetMapping("/check-username")
+    public ResponseEntity<Map<String, Boolean>> checkUsername(@RequestParam String username) {
+        boolean available = authService.isUsernameAvailable(username);
+        return ResponseEntity.ok(Map.of("available", available));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));

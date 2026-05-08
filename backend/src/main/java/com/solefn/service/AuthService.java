@@ -49,4 +49,15 @@ public class AuthService {
         String token = jwtUtil.generateToken(user.getEmail(), user.getUsername());
         return new AuthResponse(token, user.getUsername(), user.getEmail(), user.getName());
     }
+
+    /**
+     * 아이디(username) 사용 가능 여부 확인
+     * @return true: 사용 가능, false: 이미 사용 중
+     */
+    public boolean isUsernameAvailable(String username) {
+        if (username == null || username.isBlank()) {
+            return false;
+        }
+        return !userRepository.existsByUsername(username.trim());
+    }
 }

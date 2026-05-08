@@ -20,7 +20,6 @@ export default function Router() {
         <Route path="/search" element={<SearchBox />} />
         <Route path="/search/result" element={<SearchResultPage />} />
         <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/singup" element={<SingUp />} />
       </Routes>
     </BrowserRouter>
   );

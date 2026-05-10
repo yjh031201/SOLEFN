@@ -5,7 +5,7 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import AlarmPanel from "../components/panel/AlarmPanel";
 import NavBar from "../components/layout/NavBar";
-import MainHero from "../assets/images/Untitled.png";
+import MainHero from "../assets/images/Untitled.webp";
 
 export default function HomePage() {
   //더미 데이터

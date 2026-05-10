@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../assets/css/MyPage.css";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
@@ -16,12 +16,12 @@ export default function MyPage() {
   const menus = [
     {
       title: "쇼핑 정보",
-      items: ["최근 본 상품", "관심 상품"]
+      items: ["최근 본 상품", "관심 상품"],
     },
     {
       title: "내 정보",
-      items: ["로그인 정보", "프로필 정보"]
-    }
+      items: ["로그인 정보", "프로필 정보"],
+    },
   ];
 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -42,7 +42,8 @@ export default function MyPage() {
 
     let cancelled = false;
 
-    axiosInstance.get("/recent-views")
+    axiosInstance
+      .get("/recent-views")
       .then((res) => {
         if (!cancelled) setRecentViews(res.data);
       })
@@ -51,7 +52,9 @@ export default function MyPage() {
         if (!cancelled) setRecentViews([]);
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [isLoggedIn]);
 
   // ⭐ early return은 모든 Hook 호출 후에!
@@ -71,7 +74,10 @@ export default function MyPage() {
         onCategoryClick={() => setIsCategoryOpen(true)}
         onAlarmClick={() => setIsAlarmOpen(true)}
       />
-      <CategoryPanel isOpen={isCategoryOpen} onClose={() => setIsCategoryOpen(false)} />
+      <CategoryPanel
+        isOpen={isCategoryOpen}
+        onClose={() => setIsCategoryOpen(false)}
+      />
       <AlarmPanel isOpen={isAlarmOpen} onClose={() => setIsAlarmOpen(false)} />
 
       <div className="mypagecontent">
@@ -103,15 +109,30 @@ export default function MyPage() {
               </p>
             ) : (
               recentViews.map((item) => (
-                <div className="item" key={item.id}>
-                  {item.image && (
-                    <img src={item.image} alt={item.title} />
-                  )}
-                  <div>
-                    <p>{item.title}</p>
-                    <span>{formatPrice(item.price)}</span>
+                <Link
+                  to={`/product/${item.productId}`}
+                  state={{
+                    id: item.productId,
+                    title: item.title,
+                    image: item.image,
+                    price: item.price,
+                    mallName: item.mallName,
+                    brand: item.brand,
+                    link: item.link,
+                    variants: [],
+                    stores: [],
+                  }}
+                  key={item.id}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <div className="item">
+                    {item.image && <img src={item.image} alt={item.title} />}
+                    <div>
+                      <p>{item.title}</p>
+                      <span>{formatPrice(item.price)}</span>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))
             )}
           </section>

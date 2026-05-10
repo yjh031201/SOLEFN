@@ -24,23 +24,25 @@ export default function ProductDetail() {
   const [chartPeriod, setChartPeriod] = useState("1M");
 
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn || !product) return;
 
-    // TODO: 실제 상품 정보로 교체 (지금은 더미)
+    // 현재 보고 있는 상품의 실제 정보로 저장
     const productInfo = {
-      productId: "AF1-CW2288-111",
-      title: "나이키 에어포스 1 '07 CW2288-111",
-      image: "/image/Air.png",
-      price: "47348",
-      mallName: "SSG.COM",
-      brand: "NIKE",
-      link: "https://example.com/product",
+      productId: product.id,
+      title: product.title,
+      image: product.image,
+      price: String(product.price ?? ""),
+      mallName: product.mallName,
+      brand: product.brand,
+      link: product.link,
     };
+
+    if (!productInfo.productId) return;
 
     axiosInstance
       .post("/recent-views", productInfo)
       .catch((err) => console.error("최근 본 상품 기록 실패:", err));
-  }, [isLoggedIn]);
+  }, [isLoggedIn, product]);
 
   const priceDataByPeriod = {
     "1M": [

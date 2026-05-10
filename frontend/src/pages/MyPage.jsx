@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/MyPage.css";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
-import Sidebar from "../components/layout/Sidebar.jsx";
-import CategoryPanel from "../components/panel/CategoryPanel.jsx";
-import AlarmPanel from "../components/panel/AlarmPanel.jsx";
-import { useAuth } from "../context/AuthContext.jsx";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Sidebar from "../components/Sidebar";
+import CategoryPanel from "../components/CategoryPanel";
+import AlarmPanel from "../components/AlarmPanel";
+import { useAuth } from "../context/AuthContext";
+import axiosInstance from "../utils/axiosInstance";
 
 export default function MyPage() {
   const { user, isLoggedIn } = useAuth();
@@ -25,74 +26,98 @@ export default function MyPage() {
 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+  const [recentViews, setRecentViews] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // 로그인 안 된 사용자는 로그인 페이지로 (lazy init이 아니라 useEffect 사용)
+  // 로그인 안 된 사용자는 로그인 페이지로
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login");
     }
   }, [isLoggedIn, navigate]);
 
-  // 로그인 안 된 상태면 화면 안 그림 (리다이렉트되기 전)
+  // 최근 본 상품 가져오기
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    setLoading(true);
+    axiosInstance.get("/recent-views")
+      .then((res) => {
+        setRecentViews(res.data);
+      })
+      .catch((err) => {
+        console.error("최근 본 상품 조회 실패:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [isLoggedIn]);
+
   if (!isLoggedIn || !user) {
     return null;
   }
 
+  const formatPrice = (price) => {
+    const num = Number(price);
+    if (Number.isNaN(num)) return price;
+    return `${num.toLocaleString("ko-KR")}원`;
+  };
+
   return (
-      <div className="mypagecontainer">
-        <Header
-            onCategoryClick={() => setIsCategoryOpen(true)}
-            onAlarmClick={() => setIsAlarmOpen(true)}
-        />
-        <CategoryPanel isOpen={isCategoryOpen} onClose={() => setIsCategoryOpen(false)} />
-        <AlarmPanel isOpen={isAlarmOpen} onClose={() => setIsAlarmOpen(false)} />
+    <div className="mypagecontainer">
+      <Header
+        onCategoryClick={() => setIsCategoryOpen(true)}
+        onAlarmClick={() => setIsAlarmOpen(true)}
+      />
+      <CategoryPanel isOpen={isCategoryOpen} onClose={() => setIsCategoryOpen(false)} />
+      <AlarmPanel isOpen={isAlarmOpen} onClose={() => setIsAlarmOpen(false)} />
 
-        <div className="mypagecontent">
-          <Sidebar title="마이페이지" menus={menus} link="/mypage" />
+      <div className="mypagecontent">
+        <Sidebar title="마이페이지" menus={menus} link="/mypage" />
 
-          <main className="mypagemain">
-            <div className="user-box">
-              <div className="left-group">
-                <div className="user-profile"></div>
-                <div className="user-info">
-                  <strong>{user.name}</strong>
-                  <p>{user.email}</p>
-                </div>
-              </div>
-              <div className="user-bottons">
-                <button>프로필 관리</button>
-                <button>내 스타일</button>
+        <main className="mypagemain">
+          <div className="user-box">
+            <div className="left-group">
+              <div className="user-profile"></div>
+              <div className="user-info">
+                <strong>{user.name}</strong>
+                <p>{user.email}</p>
               </div>
             </div>
+            <div className="user-bottons">
+              <button>프로필 관리</button>
+              <button>내 스타일</button>
+            </div>
+          </div>
 
-            <section className="section">
-              <h3>최근 본 상품</h3>
+          {/* 최근 본 상품 */}
+          <section className="section">
+            <h3>최근 본 상품</h3>
 
-              <div className="item">
-                <div>
-                  <p>Apple 2022 MacBook Air</p>
-                  <span>100원</span>
+            {loading ? (
+              <p style={{ padding: "20px 0", color: "#888" }}>불러오는 중...</p>
+            ) : recentViews.length === 0 ? (
+              <p style={{ padding: "20px 0", color: "#888" }}>
+                최근 본 상품이 없습니다.
+              </p>
+            ) : (
+              recentViews.map((item) => (
+                <div className="item" key={item.id}>
+                  {item.image && (
+                    <img src={item.image} alt={item.title} />
+                  )}
+                  <div>
+                    <p>{item.title}</p>
+                    <span>{formatPrice(item.price)}</span>
+                  </div>
                 </div>
-              </div>
-
-              <div className="item">
-                <div>
-                  <p>Louis Vuitton Belt</p>
-                  <span>100원</span>
-                </div>
-              </div>
-
-              <div className="item">
-                <div>
-                  <p>Adidas Sneakers</p>
-                  <span>100원</span>
-                </div>
-              </div>
-            </section>
-          </main>
-        </div>
-
-        <Footer />
+              ))
+            )}
+          </section>
+        </main>
       </div>
+
+      <Footer />
+    </div>
   );
 }

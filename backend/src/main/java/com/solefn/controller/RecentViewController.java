@@ -1,5 +1,6 @@
 package com.solefn.controller;
 
+import com.solefn.dto.RecentViewRequest;
 import com.solefn.entity.RecentView;
 import com.solefn.entity.User;
 import com.solefn.service.RecentViewService;
@@ -23,12 +24,15 @@ public class RecentViewController {
     @PostMapping
     public ResponseEntity<Void> addRecentView(
             @AuthenticationPrincipal User user,
-            @RequestBody RecentView recentView
+            @RequestBody RecentViewRequest request
     ) {
         if (user == null) {
             return ResponseEntity.status(401).build();
         }
-        recentViewService.addRecentView(user, recentView);
+        if (request.getProductId() == null || request.getProductId().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        recentViewService.addRecentView(user, request);
         return ResponseEntity.ok().build();
     }
 

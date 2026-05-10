@@ -1,5 +1,6 @@
 package com.solefn.service;
 
+import com.solefn.dto.RecentViewRequest;
 import com.solefn.entity.RecentView;
 import com.solefn.entity.User;
 import com.solefn.repository.RecentViewRepository;
@@ -16,26 +17,44 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RecentViewService {
 
-    private static final int MAX_RECENT_ITEMS = 20;
+    private static final int MAX_RECENT_ITEMS = 10;
 
     private final RecentViewRepository recentViewRepository;
 
     /**
-     * 최근 본 상품 추가 (이미 있으면 시간만 갱신)
+     * 최근 본 상품 추가 (이미 있으면 시간 + 정보 갱신)
      */
     @Transactional
-    public void addRecentView(User user, RecentView recentView) {
+    public void addRecentView(User user, RecentViewRequest request) {
         Optional<RecentView> existing =
-                recentViewRepository.findByUserAndProductId(user, recentView.getProductId());
+                recentViewRepository.findByUserAndProductId(user, request.getProductId());
 
         if (existing.isPresent()) {
-            // 기존 기록 시간만 갱신
-            existing.get().setViewedAt(LocalDateTime.now());
+            // 기존 기록: 시간 갱신 + 변동 가능한 정보(가격 등) 같이 갱신
+            RecentView rv = existing.get();
+            rv.setTitle(request.getTitle());
+            rv.setImage(request.getImage());
+            rv.setPrice(request.getPrice());
+            rv.setMallName(request.getMallName());
+            rv.setBrand(request.getBrand());
+            rv.setLink(request.getLink());
+            rv.setViewedAt(LocalDateTime.now());
         } else {
             // 새로 저장
-            recentView.setUser(user);
-            recentView.setViewedAt(LocalDateTime.now());
-            recentViewRepository.save(recentView);
+            RecentView rv = new RecentView();
+            rv.setUser(user);
+            rv.setProductId(request.getProductId());
+            rv.setTitle(request.getTitle());
+            rv.setImage(request.getImage());
+            rv.setPrice(request.getPrice());
+            rv.setMallName(request.getMallName());
+            rv.setBrand(request.getBrand());
+            rv.setLink(request.getLink());
+            rv.setViewedAt(LocalDateTime.now());
+            recentViewRepository.save(rv);
+
+            // 20개 초과 시 오래된 것 삭제
+            pruneOldEntries(user);
         }
     }
 
@@ -47,5 +66,19 @@ public class RecentViewService {
                 user,
                 PageRequest.of(0, MAX_RECENT_ITEMS)
         );
+    }
+
+    /**
+     * MAX_RECENT_ITEMS 초과분 삭제
+     */
+    private void pruneOldEntries(User user) {
+        List<RecentView> all = recentViewRepository.findByUserOrderByViewedAtDesc(
+                user,
+                PageRequest.of(0, Integer.MAX_VALUE)
+        );
+        if (all.size() > MAX_RECENT_ITEMS) {
+            List<RecentView> toDelete = all.subList(MAX_RECENT_ITEMS, all.size());
+            recentViewRepository.deleteAll(toDelete);
+        }
     }
 }

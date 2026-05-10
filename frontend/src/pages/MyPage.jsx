@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/MyPage.css";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Sidebar from "../components/Sidebar";
-import CategoryPanel from "../components/CategoryPanel";
-import AlarmPanel from "../components/AlarmPanel";
-import { useAuth } from "../context/AuthContext";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import Sidebar from "../components/layout/Sidebar.jsx";
+import CategoryPanel from "../components/panel/CategoryPanel.jsx";
+import AlarmPanel from "../components/panel/AlarmPanel.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import axiosInstance from "../utils/axiosInstance";
 
 export default function MyPage() {
@@ -26,8 +26,8 @@ export default function MyPage() {
 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
-  const [recentViews, setRecentViews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // null = 로딩 중, [] = 로딩 끝났는데 비어있음, [...] = 데이터 있음
+  const [recentViews, setRecentViews] = useState(null);
 
   // 로그인 안 된 사용자는 로그인 페이지로
   useEffect(() => {
@@ -36,23 +36,25 @@ export default function MyPage() {
     }
   }, [isLoggedIn, navigate]);
 
-  // 최근 본 상품 가져오기
+  // 최근 본 상품 가져오기 (외부 API 호출이라 useEffect가 적합)
   useEffect(() => {
     if (!isLoggedIn) return;
 
-    setLoading(true);
+    let cancelled = false;
+
     axiosInstance.get("/recent-views")
       .then((res) => {
-        setRecentViews(res.data);
+        if (!cancelled) setRecentViews(res.data);
       })
       .catch((err) => {
         console.error("최근 본 상품 조회 실패:", err);
-      })
-      .finally(() => {
-        setLoading(false);
+        if (!cancelled) setRecentViews([]);
       });
+
+    return () => { cancelled = true; };
   }, [isLoggedIn]);
 
+  // ⭐ early return은 모든 Hook 호출 후에!
   if (!isLoggedIn || !user) {
     return null;
   }
@@ -90,11 +92,10 @@ export default function MyPage() {
             </div>
           </div>
 
-          {/* 최근 본 상품 */}
           <section className="section">
             <h3>최근 본 상품</h3>
 
-            {loading ? (
+            {recentViews === null ? (
               <p style={{ padding: "20px 0", color: "#888" }}>불러오는 중...</p>
             ) : recentViews.length === 0 ? (
               <p style={{ padding: "20px 0", color: "#888" }}>

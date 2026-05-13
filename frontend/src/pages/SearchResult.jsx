@@ -6,6 +6,8 @@ import Header from "../components/layout/Header";
 import CategoryPanel from "../components/panel/CategoryPanel";
 import AlarmPanel from "../components/panel/AlarmPanel";
 import { addRecentSearch } from "../utils/recentSearches";
+import axiosInstance from "../utils/axiosInstance";
+import { useAuth } from "../context/AuthContext";
 
 export default function SearchResult() {
   // --- [URL 쿼리] ---
@@ -16,6 +18,7 @@ export default function SearchResult() {
   const [activeModal, setActiveModal] = useState(null);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [currentSort, setCurrentSort] = useState("인기순");
+  const { isLoggedIn } = useAuth();
   const [wishList, setWishList] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
@@ -156,11 +159,50 @@ export default function SearchResult() {
     "290 이상",
   ];
 
+  // 로그인 상태일 때 관심상품 productId 목록 초기 로드
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    axiosInstance
+      .get("/wishlist/ids")
+      .then((res) => setWishList(res.data ?? []))
+      .catch(() => {});
+  }, [isLoggedIn]);
+
   // --- [이벤트 핸들러] ---
-  const toggleWish = (id) => {
+  const toggleWish = (e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isLoggedIn) return; // 비로그인 무시
+
+    const id = item.id;
+    const isWished = wishList.includes(id);
+
+    // 낙관적 UI 업데이트
     setWishList((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+      isWished ? prev.filter((i) => i !== id) : [...prev, id],
     );
+
+    if (isWished) {
+      axiosInstance.delete(`/wishlist/${id}`).catch(() => {
+        // 실패 시 롤백
+        setWishList((prev) => [...prev, id]);
+      });
+    } else {
+      axiosInstance
+        .post("/wishlist", {
+          productId: id,
+          title: item.title,
+          image: item.image,
+          price: String(item.price ?? ""),
+          mallName: item.mallName,
+          brand: item.brand,
+          link: item.link,
+        })
+        .catch(() => {
+          // 실패 시 롤백
+          setWishList((prev) => prev.filter((i) => i !== id));
+        });
+    }
   };
 
   const toggleColor = (name) => {
@@ -321,11 +363,7 @@ export default function SearchResult() {
                     <span
                       className={`material-symbols-outlined wish-icon ${isWished ? "active" : ""
                         }`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleWish(item.id);
-                      }}
+                      onClick={(e) => toggleWish(e, item)}
                     >
                       {isWished ? "favorite" : "favorite_border"}
                     </span>

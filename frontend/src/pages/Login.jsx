@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { useAuth } from "../context/AuthContext.jsx";
-import { Button } from "../components/loginui/Button";
-import { Card, CardContent } from "../components/loginui/Card";
-import { Checkbox } from "../components/loginui/CheckBox";
-import { Input } from "../components/loginui/input";
+import { Button } from "../components/loginui/Button.jsx";
+import { Card, CardContent } from "../components/loginui/Card.jsx";
+import { Checkbox } from "../components/loginui/CheckBox.jsx";
+import { Input } from "../components/loginui/Input.jsx";
 import solefn from "../assets/images/SOLEFN.png";
 // const formFields = [
 //   {

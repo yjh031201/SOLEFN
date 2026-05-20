@@ -61,6 +61,14 @@
     flex: 1.2;
 }
 
+.product-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
 .price-header {
     display: flex;
     align-items: center;
@@ -83,6 +91,25 @@
 .mall-list {
     width: 100%;
     border-collapse: collapse;
+}
+
+.stores-more-btn {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px 0;
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s;
+}
+
+.stores-more-btn:hover {
+    background-color: #f5f5f5;
 }
 
 .mall-list th {

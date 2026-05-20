@@ -22,6 +22,11 @@ export default function ProductDetail() {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
   const [chartPeriod, setChartPeriod] = useState("1M");
+  const [showAllStores, setShowAllStores] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn || !product) return;
@@ -129,6 +134,7 @@ export default function ProductDetail() {
   const currentLink = selectedVariant?.link ?? product.link;
   const currentMallName = selectedVariant?.mallName ?? product.mallName;
   const currentStores = selectedVariant?.stores ?? product.stores ?? [];
+  const currentTitle = selectedVariant?.stores?.[0]?.title ?? product.title;
 
   return (
     <>
@@ -158,7 +164,7 @@ export default function ProductDetail() {
                       <button
                         key={variant.color}
                         className={`color-btn${selectedVariant?.color === variant.color ? " active" : ""}`}
-                        onClick={() => setSelectedVariant(variant)}
+                        onClick={() => { setSelectedVariant(variant); setShowAllStores(false); }}
                       >
                         {variant.color}
                       </button>
@@ -168,6 +174,7 @@ export default function ProductDetail() {
               </div>
 
               <div className="price-comparison">
+                <h2 className="product-title">{currentTitle}</h2>
                 <div className="price-header">
                   <span className="price-label">최저가</span>
                   <span className="price-value">
@@ -193,7 +200,7 @@ export default function ProductDetail() {
                   </thead>
                   <tbody>
                     {currentStores.length > 0 ? (
-                      currentStores.map((store, idx) => (
+                      (showAllStores ? currentStores : currentStores.slice(0, 7)).map((store, idx) => (
                         <tr
                           key={store.id}
                           className={idx === 0 ? "highlight" : ""}
@@ -233,6 +240,16 @@ export default function ProductDetail() {
                     )}
                   </tbody>
                 </table>
+                {currentStores.length > 7 && (
+                  <button
+                    className="stores-more-btn"
+                    onClick={() => setShowAllStores((prev) => !prev)}
+                  >
+                    {showAllStores
+                      ? "접기 ∧"
+                      : `더보기 (${currentStores.length - 7}개 더) ∨`}
+                  </button>
+                )}
               </div>
             </section>
 
@@ -272,23 +289,17 @@ export default function ProductDetail() {
             <nav className="product-tabs">
               <ul>
                 <li className={activeTab === "spec" ? "active" : ""}>
-                  <a href="#spec-section" onClick={() => setActiveTab("spec")}>
+                  <a href="#spec-section" onClick={(e) => { e.preventDefault(); setActiveTab("spec"); document.getElementById("spec-section")?.scrollIntoView({ behavior: "smooth" }); }}>
                     상품 상세정보
                   </a>
                 </li>
                 <li className={activeTab === "review" ? "active" : ""}>
-                  <a
-                    href="#review-section"
-                    onClick={() => setActiveTab("review")}
-                  >
+                  <a href="#review-section" onClick={(e) => { e.preventDefault(); setActiveTab("review"); document.getElementById("review-section")?.scrollIntoView({ behavior: "smooth" }); }}>
                     의견/리뷰 <span>1,235</span>
                   </a>
                 </li>
                 <li className={activeTab === "related" ? "active" : ""}>
-                  <a
-                    href="#related-section"
-                    onClick={() => setActiveTab("related")}
-                  >
+                  <a href="#related-section" onClick={(e) => { e.preventDefault(); setActiveTab("related"); document.getElementById("related-section")?.scrollIntoView({ behavior: "smooth" }); }}>
                     연관상품
                   </a>
                 </li>

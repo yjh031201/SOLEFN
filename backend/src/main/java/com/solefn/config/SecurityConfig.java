@@ -33,6 +33,7 @@ public class SecurityConfig {
                         // 그 외는 모두 인증 필요
                         .requestMatchers("/api/users/**").authenticated()
                         .requestMatchers("/api/recent-views/**").authenticated()
+                        .requestMatchers("/api/wishlist/**").authenticated()
                         // 나머지는 일단 허용 (필요시 조정)
                         .anyRequest().permitAll()
                 )

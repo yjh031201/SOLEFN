@@ -37,5 +37,7 @@
 >docker ps로 컨테이너 생성 확인   
 >docker exec -it solefn-mysql mysql -u root -p1234 solefn_db mysql 접속   
 >use solefn_db로 데이터베이스 연결   
+>show tables //테이블 목록확인
+>select * from 테이블이름 // 테이블 확인
 
 

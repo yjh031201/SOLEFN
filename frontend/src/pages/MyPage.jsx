@@ -16,7 +16,10 @@ export default function MyPage() {
   const menus = [
     {
       title: "쇼핑 정보",
-      items: ["최근 본 상품", "관심 상품"],
+      items: [
+        { label: "최근 본 상품", scrollTo: "section-recent" },
+        { label: "관심 상품", scrollTo: "section-wishlist" },
+      ],
     },
     {
       title: "내 정보",
@@ -28,6 +31,10 @@ export default function MyPage() {
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
   // null = 로딩 중, [] = 로딩 끝났는데 비어있음, [...] = 데이터 있음
   const [recentViews, setRecentViews] = useState(null);
+  const [recentShowAll, setRecentShowAll] = useState(false);
+
+  const [wishlists, setWishlists] = useState(null);
+  const [wishShowAll, setWishShowAll] = useState(false);
 
   // 로그인 안 된 사용자는 로그인 페이지로
   useEffect(() => {
@@ -50,6 +57,27 @@ export default function MyPage() {
       .catch((err) => {
         console.error("최근 본 상품 조회 실패:", err);
         if (!cancelled) setRecentViews([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoggedIn]);
+
+  // 관심상품 가져오기
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    let cancelled = false;
+
+    axiosInstance
+      .get("/wishlist")
+      .then((res) => {
+        if (!cancelled) setWishlists(res.data ?? []);
+      })
+      .catch((err) => {
+        console.error("관심상품 조회 실패:", err);
+        if (!cancelled) setWishlists([]);
       });
 
     return () => {
@@ -98,7 +126,8 @@ export default function MyPage() {
             </div>
           </div>
 
-          <section className="section">
+          {/* 최근 본 상품 */}
+          <section className="section" id="section-recent">
             <h3>최근 본 상품</h3>
 
             {recentViews === null ? (
@@ -108,32 +137,111 @@ export default function MyPage() {
                 최근 본 상품이 없습니다.
               </p>
             ) : (
-              recentViews.map((item) => (
-                <Link
-                  to={`/product/${item.productId}`}
-                  state={{
-                    id: item.productId,
-                    title: item.title,
-                    image: item.image,
-                    price: item.price,
-                    mallName: item.mallName,
-                    brand: item.brand,
-                    link: item.link,
-                    variants: [],
-                    stores: [],
-                  }}
-                  key={item.id}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  <div className="item">
-                    {item.image && <img src={item.image} alt={item.title} />}
-                    <div>
-                      <p>{item.title}</p>
-                      <span>{formatPrice(item.price)}</span>
+              <>
+                {(recentShowAll ? recentViews : recentViews.slice(0, 4)).map((item) => (
+                  <Link
+                    to={`/product/${item.productId}`}
+                    state={{
+                      id: item.productId,
+                      title: item.title,
+                      image: item.image,
+                      price: item.price,
+                      mallName: item.mallName,
+                      brand: item.brand,
+                      link: item.link,
+                      variants: [],
+                      stores: [],
+                    }}
+                    key={item.id}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <div className="item">
+                      {item.image && <img src={item.image} alt={item.title} />}
+                      <div>
+                        <p>{item.title}</p>
+                        <span>{formatPrice(item.price)}</span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))
+                  </Link>
+                ))}
+                {recentViews.length > 4 && (
+                  <button
+                    className="mypage-more-btn"
+                    onClick={() => setRecentShowAll((prev) => !prev)}
+                  >
+                    {recentShowAll ? "접기 ∧" : `더보기 (${recentViews.length - 4}개 더) ∨`}
+                  </button>
+                )}
+              </>
+            )}
+          </section>
+
+          {/* 관심 상품 */}
+          <section className="section" id="section-wishlist">
+            <h3>관심 상품</h3>
+
+            {wishlists === null ? (
+              <p style={{ padding: "20px 0", color: "#888" }}>불러오는 중...</p>
+            ) : wishlists.length === 0 ? (
+              <p style={{ padding: "20px 0", color: "#888" }}>
+                관심 상품이 없습니다.
+              </p>
+            ) : (
+              <>
+                {(wishShowAll ? wishlists : wishlists.slice(0, 4)).map((item) => (
+                  <Link
+                    to={`/product/${item.productId}`}
+                    state={{
+                      id: item.productId,
+                      title: item.title,
+                      image: item.image,
+                      price: item.price,
+                      mallName: item.mallName,
+                      brand: item.brand,
+                      link: item.link,
+                      variants: [],
+                      stores: [],
+                    }}
+                    key={item.id}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <div className="item">
+                      {item.image && <img src={item.image} alt={item.title} />}
+                      <div>
+                        <p>{item.title}</p>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span>{formatPrice(item.price)}</span>
+                          <span
+                            className="material-symbols-outlined wish-icon active"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              axiosInstance
+                                .delete(`/wishlist/${item.productId}`)
+                                .then(() => {
+                                  setWishlists((prev) =>
+                                    prev.filter((w) => w.productId !== item.productId)
+                                  );
+                                })
+                                .catch(() => {});
+                            }}
+                          >
+                            favorite
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+                {wishlists.length > 4 && (
+                  <button
+                    className="mypage-more-btn"
+                    onClick={() => setWishShowAll((prev) => !prev)}
+                  >
+                    {wishShowAll ? "접기 ∧" : `더보기 (${wishlists.length - 4}개 더) ∨`}
+                  </button>
+                )}
+              </>
             )}
           </section>
         </main>

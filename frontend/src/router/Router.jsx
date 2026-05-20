@@ -7,6 +7,8 @@ import SearchBox from "../pages/SearchBox";
 import SearchResult from "../pages/SearchResult";
 import Login from "../pages/Login.jsx";
 import Signup from "../pages/SignUp.jsx";
+import FindId from "../pages/FindId.jsx";
+import FindPassword from "../pages/FindPassword.jsx";
 
 function SearchResultWithKey() {
   const [searchParams] = useSearchParams();
@@ -23,6 +25,8 @@ export default function Router() {
         <Route path="/customer" element={<CustomerCenter />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/find-id" element={<FindId />} />
+        <Route path="/find-password" element={<FindPassword />} />
         <Route path="/search" element={<SearchBox />} />
         <Route path="/search/result" element={<SearchResultWithKey />} />
         <Route path="/product/:id" element={<ProductDetail />} />

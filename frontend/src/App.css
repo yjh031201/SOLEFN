@@ -19,11 +19,8 @@
 
 body {
   font-family:
-    "Pretendard",
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    sans-serif;
+    'Noto Sans KR',
+     sans-serif;
   color: var(--text);
   background-color: var(--bg);
 }

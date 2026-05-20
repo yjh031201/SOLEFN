@@ -19,6 +19,13 @@
 .category-nav span {
   cursor: pointer;
   color: #555;
+  display: inline-block;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.category-nav span:hover {
+  color: #000;
 }
 
 .category-nav .active {
@@ -242,11 +249,19 @@
 .category-item-image {
   width: 120px;
   height: 90px;
-  object-fit: contain;
   border-radius: 16px;
-  padding: 10px;
   background: #f8f8f8c7;
   transition: all 0.2s ease;
+}
+
+.brand-item-image {
+  object-fit: contain;
+  padding: 10px;
+}
+
+.category-item-image {
+  object-fit: cover;
+  padding: 0;
 }
 
 .brand-item-name,

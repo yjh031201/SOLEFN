@@ -94,9 +94,14 @@
   object-fit: cover;
   border-radius: 14px;
   background: #f6f6f6;
-  padding: 6px;
+  padding: 0;
   display: block;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.drawer-section.is-brand .drawer-card img {
+  object-fit: contain;
+  padding: 10px;
 }
 
 .drawer-card p {

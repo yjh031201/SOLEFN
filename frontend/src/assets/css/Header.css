@@ -56,15 +56,27 @@
 .icon-btn {
   width: 36px;
   height: 36px;
+  padding: 0;
   border: none;
   background: transparent;
   font-size: 18px;
   cursor: pointer;
   border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .icon-btn:hover {
   background-color: #f0f0f0;
+}
+
+.icon-btn img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  object-fit: contain;
 }
 
 @media (max-width: 1024px) {

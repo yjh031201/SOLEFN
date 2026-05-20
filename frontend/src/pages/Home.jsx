@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../assets/css/HomePage.css";
 import CategoryPanel from "../components/panel/CategoryPanel";
 import Header from "../components/layout/Header";
@@ -6,40 +7,20 @@ import Footer from "../components/layout/Footer";
 import AlarmPanel from "../components/panel/AlarmPanel";
 import NavBar from "../components/layout/NavBar";
 import MainHero from "../assets/images/Untitled.webp";
+import nikeLogo from "../assets/images/nike_logo.png";
+import adidasLogo from "../assets/images/adidas_logo.png";
+import newbalanceLogo from "../assets/images/newbalance_logo.png";
+import converseLogo from "../assets/images/Converse_logo.svg.png";
+import vansLogo from "../assets/images/vans_logo.png";
 
 export default function HomePage() {
   //더미 데이터
   const brandItems = [
-    {
-      id: 1,
-      name: "나이키",
-      image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      name: "아디다스",
-      image:
-        "https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=600&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      name: "뉴발란스",
-      image:
-        "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=600&auto=format&fit=crop",
-    },
-    {
-      id: 4,
-      name: "컨버스",
-      image:
-        "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=600&auto=format&fit=crop",
-    },
-    {
-      id: 5,
-      name: "반스",
-      image:
-        "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=600&auto=format&fit=crop",
-    },
+    { id: 1, name: "나이키",   image: nikeLogo },
+    { id: 2, name: "아디다스", image: adidasLogo },
+    { id: 3, name: "뉴발란스", image: newbalanceLogo },
+    { id: 4, name: "컨버스",   image: converseLogo },
+    { id: 5, name: "반스",     image: vansLogo },
   ];
 
   const categoryItems = [
@@ -47,61 +28,61 @@ export default function HomePage() {
       id: 1,
       name: "지금 인기",
       image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1554192833-605c183c9f45?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 2,
       name: "스니커즈",
       image:
-        "https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 3,
       name: "구두",
       image:
-        "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1552422554-0d5af0c79fc6?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 4,
       name: "슬리퍼",
       image:
-        "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1622920799137-86c891159e44?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 5,
       name: "하이힐",
       image:
-        "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 6,
       name: "등산화",
       image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1631287381310-925554130169?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 7,
       name: "워커",
       image:
-        "https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1674421240323-1a8d4602cc1e?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 8,
       name: "크로스",
       image:
-        "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1662380683558-8325ab2ca065?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 9,
       name: "샌들",
       image:
-        "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1618615098938-84fc29796e76?q=80&w=600&auto=format&fit=crop",
     },
     {
       id: 10,
       name: "캔버스화",
       image:
-        "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1650320079970-b4ee8f0dae33?q=80&w=600&auto=format&fit=crop",
     },
   ];
 
@@ -111,26 +92,39 @@ export default function HomePage() {
       title: "브랜드 비교",
       desc: "여러 쇼핑몰의 가격을 한눈에 비교해보세요.",
       image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1618677831741-6260a73ff4f9?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 2,
       title: "최저가 확인",
       desc: "신발별 최저가를 빠르게 확인할 수 있어요.",
       image:
-        "https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1571907483086-3c0ea40cc16d?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 3,
       title: "바로 이동",
       desc: "원하는 쇼핑몰로 이동해서 바로 구매하세요.",
       image:
-        "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop",
     },
   ];
 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [categoryInitialSection, setCategoryInitialSection] = useState(null);
   const [isAlarmOpen, setIsAlarmOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const goSearch = (keyword) => {
+    navigate(`/search/result?q=${encodeURIComponent(keyword)}`);
+  };
+
+  const openCategoryPanel = (section = null) => {
+    setCategoryInitialSection(section);
+    setIsCategoryOpen(true);
+    setIsAlarmOpen(false);
+  };
 
   return (
     <>
@@ -138,6 +132,7 @@ export default function HomePage() {
         {/* 헤더추가 */}
         <Header
           onCategoryClick={() => {
+            setCategoryInitialSection(null);
             setIsCategoryOpen(true);
             setIsAlarmOpen(false);
           }}
@@ -149,6 +144,7 @@ export default function HomePage() {
         <CategoryPanel
           isOpen={isCategoryOpen}
           onClose={() => setIsCategoryOpen(false)}
+          initialSection={categoryInitialSection}
         />
 
         <AlarmPanel
@@ -199,8 +195,7 @@ export default function HomePage() {
           {/* 프로모션 섹션 */}
           <section className="promo-section">
             <div className="section-title-row">
-              <h2>FIND SHOES가 추천하는 신발</h2>
-              <div className="more-btn">더보기</div>
+              <h2>SOLEFN만의 특별한 혜택</h2>
             </div>
 
             <div className="promo-grid">
@@ -219,12 +214,21 @@ export default function HomePage() {
           <section className="brand-section">
             <div className="section-title-row">
               <h2>브랜드</h2>
-              <div className="more-btn">전체보기</div>
+              <div
+                className="more-btn"
+                onClick={() => openCategoryPanel("브랜드")}
+              >
+                더보기
+              </div>
             </div>
 
             <div className="brand-grid">
               {brandItems.map((item) => (
-                <div className="brand-item" key={item.id}>
+                <div
+                  className="brand-item"
+                  key={item.id}
+                  onClick={() => goSearch(item.name)}
+                >
                   <img
                     src={item.image}
                     alt={item.name}
@@ -239,12 +243,15 @@ export default function HomePage() {
           <section className="category-section">
             <div className="section-title-row">
               <h2>카테고리 모두보기</h2>
-              <div className="more-btn">전체보기</div>
             </div>
 
             <div className="category-grid">
               {categoryItems.map((item) => (
-                <div className="category-item" key={item.id}>
+                <div
+                  className="category-item"
+                  key={item.id}
+                  onClick={() => goSearch(item.name)}
+                >
                   <img
                     src={item.image}
                     alt={item.name}

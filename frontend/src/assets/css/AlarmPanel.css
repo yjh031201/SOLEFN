@@ -55,6 +55,77 @@
   padding: 16px 20px;
 }
 
+.alarm-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.alarm-thumbnail {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.alarm-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alarm-content {
+  flex: 1;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.alarm-content:hover .alarm-message {
+  color: #4079f2;
+}
+
+.alarm-message {
+  font-size: 14px;
+  color: #222;
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.alarm-product {
+  font-size: 13px;
+  color: #555;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alarm-time {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.alarm-delete-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #bbb;
+  cursor: pointer;
+  padding: 2px 4px;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.alarm-delete-btn:hover {
+  color: #555;
+}
+
 .alarm-overlay {
   position: fixed;
   inset: 0;

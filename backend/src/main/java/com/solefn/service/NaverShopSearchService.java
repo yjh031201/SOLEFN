@@ -16,8 +16,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -181,11 +183,13 @@ public class NaverShopSearchService {
     }
 
     public SearchResponse search(String query, int offset) {
-        int networkStart = (offset / LIMIT) + 1;
+        int displaySize = Math.min(100, LIMIT * 2);
+        // offset=0 → start=1, offset=50 → start=101, offset=100 → start=201
+        int networkStart = (offset / LIMIT) * displaySize + 1;
 
         URI uri = UriComponentsBuilder.fromHttpUrl(NAVER_SHOP_API_URL)
                 .queryParam("query", query + " 신발")
-                .queryParam("display", Math.min(100, LIMIT * 2))
+                .queryParam("display", displaySize)
                 .queryParam("start", networkStart)
                 .queryParam("sort", "sim")
                 .encode()
@@ -211,7 +215,7 @@ public class NaverShopSearchService {
         List<NaverItem> filtered = rawItems.stream()
                 .filter(item -> "패션잡화".equals(item.category1())
                         && item.category2() != null
-                        && item.category2().contains("신발"))
+                        && item.category2().endsWith("신발"))
                 .toList();
 
         // 브랜드 + 모델코드 기준으로 1차 그룹핑
@@ -251,6 +255,33 @@ public class NaverShopSearchService {
         return null; // 감지 실패
     }
 
+    // 브랜드별 색상 코드 suffix 추출 패턴 (그룹 1 = 색상 코드)
+    private static final Pattern[] COLOR_SUFFIX_PATTERNS = {
+        // Nike/Adidas: CW2288-111, DH2987 100
+        Pattern.compile("[A-Z]{2,4}\\d{3,5}[-\\s](\\d{3})(?!\\d)"),
+        // ASICS: 1011B548-100, 1011A987-001
+        Pattern.compile("\\d{4}[A-Z]\\d{3}[-\\s](\\d{3})(?!\\d)"),
+        // Converse/NB single: M9160-003, W990-GL6 제외하고 순수 숫자 suffix
+        Pattern.compile("(?<![A-Z])[A-Z]\\d{4,5}[-\\s](\\d{3})(?!\\d)"),
+        // Puma: 374915-01 (2자리 suffix)
+        Pattern.compile("(?<!\\d)\\d{6}-(\\d{2})(?!\\d)"),
+        // Vans: VN0A38G1NWD → suffix NWD (영문 3자리)
+        Pattern.compile("VN[0-9A-Z]{6}([A-Z]{2,3})(?![A-Z0-9])"),
+    };
+
+    /**
+     * 브랜드별 색상 코드 suffix 추출
+     * 예: "CW2288-111" → "111", "1011B548-100" → "100", "VN0A38G1NWD" → "NWD"
+     */
+    private String extractColorSuffix(String title) {
+        String cleaned = title.replaceAll("<[^>]*>", "").toUpperCase();
+        for (Pattern p : COLOR_SUFFIX_PATTERNS) {
+            Matcher m = p.matcher(cleaned);
+            if (m.find()) return m.group(1);
+        }
+        return null;
+    }
+
     /**
      * 색상 그룹 키 생성
      * - 색상을 감지한 경우: 색상명 (예: "화이트")
@@ -286,9 +317,47 @@ public class NaverShopSearchService {
     }
 
     private GroupedShoeItem toGroupedItem(List<NaverItem> items) {
-        // 색상 키 기준 서브그룹핑
-        Map<String, List<NaverItem>> byColor = items.stream()
-                .collect(Collectors.groupingBy(this::makeColorKey));
+        // 1차: 색상 키 기준 서브그룹핑
+        Map<String, List<NaverItem>> byColor = new HashMap<>(items.stream()
+                .collect(Collectors.groupingBy(this::makeColorKey)));
+
+        // 2차: 기타 상품 중 색상 코드 suffix가 감지된 색상 그룹과 일치하면 해당 그룹으로 병합
+        // 예) "CW2288-111" 기타 → "CW2288 111 화이트" 화이트 그룹과 suffix(111) 일치 → 화이트로 이동
+        Map<String, String> suffixToColorKey = new HashMap<>();
+        for (Map.Entry<String, List<NaverItem>> e : byColor.entrySet()) {
+            if (!e.getKey().startsWith("기타_")) {
+                for (NaverItem item : e.getValue()) {
+                    String suffix = extractColorSuffix(item.title());
+                    if (suffix != null) suffixToColorKey.putIfAbsent(suffix, e.getKey());
+                }
+            }
+        }
+
+        if (!suffixToColorKey.isEmpty()) {
+            List<String> 기타Keys = byColor.keySet().stream()
+                    .filter(k -> k.startsWith("기타_"))
+                    .toList();
+
+            for (String 기타Key : 기타Keys) {
+                List<NaverItem> 기타Items = new ArrayList<>(byColor.get(기타Key));
+                List<NaverItem> remaining = new ArrayList<>();
+
+                for (NaverItem item : 기타Items) {
+                    String suffix = extractColorSuffix(item.title());
+                    if (suffix != null && suffixToColorKey.containsKey(suffix)) {
+                        byColor.get(suffixToColorKey.get(suffix)).add(item);
+                    } else {
+                        remaining.add(item);
+                    }
+                }
+
+                if (remaining.isEmpty()) {
+                    byColor.remove(기타Key);
+                } else {
+                    byColor.put(기타Key, remaining);
+                }
+            }
+        }
 
         // 색상별 ColorVariant 생성, 최저가 오름차순 정렬
         List<ColorVariant> variants = byColor.entrySet().stream()

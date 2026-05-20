@@ -8,6 +8,7 @@ import AlarmPanel from "../components/panel/AlarmPanel";
 import { addRecentSearch } from "../utils/recentSearches";
 import axiosInstance from "../utils/axiosInstance";
 import { useAuth } from "../context/AuthContext";
+import { useAlarm } from "../context/AlarmContext";
 
 export default function SearchResult() {
   // --- [URL 쿼리] ---
@@ -19,6 +20,7 @@ export default function SearchResult() {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [currentSort, setCurrentSort] = useState("인기순");
   const { isLoggedIn } = useAuth();
+  const { addAlarm } = useAlarm();
   const [wishList, setWishList] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
@@ -122,7 +124,6 @@ export default function SearchResult() {
     } else if (currentSort === "낮은가격순") {
       list.sort((a, b) => Number(a.price) - Number(b.price));
     }
-    // 그 외 정렬(인기순/관심순/판매일순)은 API에서 받은 순서 유지
 
     return list;
   }, [products, currentSort, isDirectInputMode, priceRange]);
@@ -184,7 +185,6 @@ export default function SearchResult() {
 
     if (isWished) {
       axiosInstance.delete(`/wishlist/${id}`).catch(() => {
-        // 실패 시 롤백
         setWishList((prev) => [...prev, id]);
       });
     } else {
@@ -198,8 +198,10 @@ export default function SearchResult() {
           brand: item.brand,
           link: item.link,
         })
+        .then(() => {
+          addAlarm("이 상품이 관심상품으로 등록되었습니다", item);
+        })
         .catch(() => {
-          // 실패 시 롤백
           setWishList((prev) => prev.filter((i) => i !== id));
         });
     }

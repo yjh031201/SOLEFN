@@ -10,7 +10,7 @@
     "dev": "cd frontend && npm run dev",
     "dev:local": "cd frontend && npm run dev:local",
     "dev:all": "docker-compose up -d mysql && cd frontend && npm run dev:local",
-    "backend:dev": "cd backend && mvnw.cmd spring-boot:run",
-    "backend:build": "cd backend && mvnw.cmd -q -DskipTests package"
+    "backend:dev": "node scripts/run-mvnw.mjs spring-boot:run",
+    "backend:build": "node scripts/run-mvnw.mjs -q -DskipTests package"
   }
 }

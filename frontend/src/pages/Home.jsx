@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect  } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/HomePage.css";
 
@@ -227,8 +227,8 @@ export default function HomePage() {
                       src={slide.video}
                       autoPlay
                       muted
-                      loop
                       playsInline
+                      loop
                     />
                   ) : (
                     <img

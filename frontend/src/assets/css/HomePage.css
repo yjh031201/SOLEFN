@@ -79,6 +79,10 @@
 /* 비디오 슬라이드도 동일한 사이즈 처리 */
 .hero-video {
   display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 
 .hero-overlay {
@@ -303,10 +307,7 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.hero-video {
-  object-fit: cover;
-  object-position: center;
-}
+
 
 /* ===== 반응형 ===== */
 @media (max-width: 1024px) {

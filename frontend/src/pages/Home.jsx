@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/HomePage.css";
+
 import CategoryPanel from "../components/panel/CategoryPanel";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import AlarmPanel from "../components/panel/AlarmPanel";
 import NavBar from "../components/layout/NavBar";
-import MainHero from "../assets/images/Untitled.webp";
+
+// 메인 히어로 슬라이드용 이미지/영상
+import MainHero from "../assets/images/MainHero.png";
+import CrocsImage from "../assets/images/Crocs.png";
+import NewImage from "../assets/images/new.png";
+import SampleVideo from "../assets/videos/sample.mp4";
+
+// 브랜드 로고
 import nikeLogo from "../assets/images/nike_logo.png";
 import adidasLogo from "../assets/images/adidas_logo.png";
 import newbalanceLogo from "../assets/images/newbalance_logo.png";
@@ -14,13 +22,64 @@ import converseLogo from "../assets/images/Converse_logo.svg.png";
 import vansLogo from "../assets/images/vans_logo.png";
 
 export default function HomePage() {
-  //더미 데이터
+  // ───────── 히어로 슬라이드 데이터 ─────────
+  const heroSlides = [
+    {
+      id: 1,
+      image: MainHero,
+      smallTitle: "어디서나 편안한",
+      title: "뉴발란스",
+      desc: "당신의 모든 걸음이 가벼워질 수 있게,\n가장 합리적인 선택을 도와드립니다.",
+    },
+    {
+      id: 2,
+      image: NewImage,
+      smallTitle: "남들보다 빠르게",
+      title: "오늘의 신상 트렌드",
+      desc: "지금 가장 핫한 스니커즈부터 한정판까지,\n당신의 스타일을 완성할 최신 라인업을 확인하세요.",
+    },
+    {
+      id: 3,
+      image: CrocsImage,
+      hideText: true,
+      desc: "가볍고 편안한 크록스와 함께\n매일을 자유롭게 걸어보세요.",
+    },
+    {
+      id: 4,
+      video: SampleVideo,
+      hideText: true,
+    },
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev === heroSlides.length - 1 ? 0 : prev + 1));
+  };
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const currentIsVideo = heroSlides[currentSlide]?.video;
+    if (currentIsVideo) return; // 영상 슬라이드면 자동 넘김 중단
+
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isPlaying, currentSlide]);
+
+  // ───────── 더미 데이터 ─────────
   const brandItems = [
-    { id: 1, name: "나이키",   image: nikeLogo },
+    { id: 1, name: "나이키", image: nikeLogo },
     { id: 2, name: "아디다스", image: adidasLogo },
     { id: 3, name: "뉴발란스", image: newbalanceLogo },
-    { id: 4, name: "컨버스",   image: converseLogo },
-    { id: 5, name: "반스",     image: vansLogo },
+    { id: 4, name: "컨버스", image: converseLogo },
+    { id: 5, name: "반스", image: vansLogo },
   ];
 
   const categoryItems = [
@@ -129,7 +188,7 @@ export default function HomePage() {
   return (
     <>
       <div className="page">
-        {/* 헤더추가 */}
+        {/* 헤더 */}
         <Header
           onCategoryClick={() => {
             setCategoryInitialSection(null);
@@ -152,30 +211,70 @@ export default function HomePage() {
           onClose={() => setIsAlarmOpen(false)}
         />
         <NavBar />
-        {/* 상단 슬라이드*/}
-        <main className="main-content">
-          <section className="hero-section">
-            <button className="slide-btn left" aria-label="이전">
-              ‹
-            </button>
 
-            <div className="hero-overlay">
-              <p className="hero-small">어디서나 편안한</p>
-              <h1 className="hero-title">나이키</h1>
-              <p className="hero-desc">
-                당신의 모든 걸음이 가벼워질 수 있게,
-                <br />
-                가장 합리적인 선택을 도와드립니다.
-              </p>
-              <button className="hero-cta">최저가 보러가기</button>
+        <main className="main-content">
+          {/* ───────── 메인 히어로 슬라이드 ───────── */}
+          <section className="hero-section">
+            <div className="hero-slides-wrapper">
+              {heroSlides.map((slide, index) => (
+                <div
+                  key={slide.id}
+                  className={`hero-slide ${index === currentSlide ? "active" : ""}`}
+                >
+                  {slide.video ? (
+                    <video
+                      className="hero-image hero-video"
+                      src={slide.video}
+                      autoPlay
+                      muted
+                      playsInline
+                      loop
+                    />
+                  ) : (
+                    <img
+                      className="hero-image"
+                      src={slide.image}
+                      alt={slide.title || "hero slide"}
+                    />
+                  )}
+
+                  <div
+                    className={`hero-overlay ${slide.hideText ? "hide-text" : ""}`}
+                  >
+                    {!slide.hideText && (
+                      <>
+                        <p className="hero-small">{slide.smallTitle}</p>
+                        <h1 className="hero-title">{slide.title}</h1>
+                        <p
+                          className="hero-desc"
+                          style={{ whiteSpace: "pre-line" }}
+                        >
+                          {slide.desc}
+                        </p>
+                        <button className="hero-cta">최저가 보러가기</button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <img className="hero-image" src={MainHero} alt="메인 신발 배너" />
-
-            <button className="slide-btn right" aria-label="다음">
+            <button
+              className="slide-btn left"
+              aria-label="이전"
+              onClick={prevSlide}
+            >
+              ‹
+            </button>
+            <button
+              className="slide-btn right"
+              aria-label="다음"
+              onClick={nextSlide}
+            >
               ›
             </button>
           </section>
+
           {/* 스타일 신발 섹션 */}
           <section className="sub-hero-section">
             <img
@@ -184,6 +283,7 @@ export default function HomePage() {
               className="sub-hero-image"
             />
           </section>
+
           {/* 슬로건 섹션 */}
           <section className="slogan-section">
             <h2>모든 가격을 넘어, 단 하나의 최선으로</h2>
@@ -192,6 +292,7 @@ export default function HomePage() {
               비교의 수고로움이 사라진 자리에 채워지는 쇼핑의 즐거움
             </p>
           </section>
+
           {/* 프로모션 섹션 */}
           <section className="promo-section">
             <div className="section-title-row">
@@ -210,6 +311,7 @@ export default function HomePage() {
               ))}
             </div>
           </section>
+
           {/* 브랜드 섹션 */}
           <section className="brand-section">
             <div className="section-title-row">
@@ -240,6 +342,7 @@ export default function HomePage() {
             </div>
           </section>
 
+          {/* 카테고리 섹션 */}
           <section className="category-section">
             <div className="section-title-row">
               <h2>카테고리 모두보기</h2>
